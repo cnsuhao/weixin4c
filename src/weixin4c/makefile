@@ -11,7 +11,8 @@ c_FILE		=	\
 			main.c \
 			cgimain.c \
 			VerifyServer.c \
-			IDL_xml_MsgType.dsc.c \
+			ReceiveText.c \
+			IDL_xml.dsc.c \
 
 ###### 目标文件、安装目录配置区
 include makeinstall

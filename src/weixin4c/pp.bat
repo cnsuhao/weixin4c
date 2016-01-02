@@ -1,3 +1,3 @@
-dsc -f IDL_xml_MsgType.dsc -c -c-xml -c-LOG
+dsc -f IDL_xml.dsc -c -c-xml -c-LOG
 pause
 

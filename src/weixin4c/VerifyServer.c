@@ -17,6 +17,9 @@ int VerifyServer( char *signature , char *timestamp , char *nonce , char *echost
 	char	result_exp[ SHA_DIGEST_LENGTH * 2 + 1 ] ;
 	int	result_exp_len ;
 	
+	SetLogFile( HOME"/log/VerifyServer.log" );
+	SetLogLevel( LOGLEVEL_DEBUG );
+	
 	InfoLog( __FILE__ , __LINE__ , "--- plistQuery ---" );
 	InfoLog( __FILE__ , __LINE__ , "signature[%s]" , signature );
 	InfoLog( __FILE__ , __LINE__ , "timestamp[%s]" , timestamp );

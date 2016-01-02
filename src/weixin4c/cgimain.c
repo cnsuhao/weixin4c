@@ -5,7 +5,7 @@ int cgiinit()
 {
 	chdir( "/tmp" );
 	
-	SetLogFile( "/home/calvin/log/VerifyServer.log" );
+	SetLogFile( HOME"/log/weixin4c.log" );
 	SetLogLevel( LOGLEVEL_DEBUG );
 	
 	return 0;
@@ -20,7 +20,7 @@ int cgimain()
 	
 	char		*post_data = NULL ;
 	int		post_data_len ;
-	xml_MsgType	xm ;
+	xml		req ;
 	
 	int		nret = 0 ;
 	
@@ -34,6 +34,7 @@ int cgimain()
 	if( signature && timestamp && nonce && echostr )
 	{
 		nret = VerifyServer( signature , timestamp , nonce , echostr ) ;
+		SetLogFile( HOME"/log/weixin4c.log" );
 		if( nret )
 		{
 			ErrorLog( __FILE__ , __LINE__ , "VerifyServer failed[%d]" , nret );
@@ -49,29 +50,44 @@ int cgimain()
 		if( nret )
 		{
 			ErrorLog( __FILE__ , __LINE__ , "PUBReadPostBuffer failed[%d]" , nret );
-			return nret;
 		}
 		else
 		{
 			InfoLog( __FILE__ , __LINE__ , "PUBReadPostBuffer ok" );
+			
+			post_data = PUBGetPostBufferPtr() ;
+			post_data_len = PUBGetPostBufferLength() ;
+			
+			memset( & req , 0x00 , sizeof(xml) );
+			nret = DSCDESERIALIZE_XML_xml( NULL , post_data , & post_data_len , & req ) ;
+			if( nret )
+			{
+				ErrorLog( __FILE__ , __LINE__ , "DSCDESERIALIZE_XML_xml_MsgType failed[%d] , xml[%s]" , nret , post_data );
+			}
+			else
+			{
+				InfoLog( __FILE__ , __LINE__ , "DSCDESERIALIZE_XML_xml_MsgType ok , xml[%s]" , post_data );
+				
+				InfoLog( __FILE__ , __LINE__ , "req.MsgType[%s]" , req.MsgType );
+				if( strcmp( req.MsgType , "<![CDATA[text]]>" ) == 0 )
+				{
+					nret = ReceiveText( post_data , post_data_len , & req ) ;
+					SetLogFile( HOME"/log/weixin4c.log" );
+					if( nret )
+					{
+						ErrorLog( __FILE__ , __LINE__ , "ReceiveText failed[%d]" , nret );
+					}
+					else
+					{
+						InfoLog( __FILE__ , __LINE__ , "ReceiveText ok" );
+					}
+				}
+				else
+				{
+					ErrorLog( __FILE__ , __LINE__ , "xml.MsgType[%s] invalid" , req.MsgType );
+				}
+			}
 		}
-		
-		post_data = PUBGetPostBufferPtr() ;
-		post_data_len = PUBGetPostBufferLength() ;
-		
-		memset( & xm , 0x00 , sizeof(xml_MsgType) );
-		nret = DSCDESERIALIZE_XML_xml_MsgType( NULL , post_data , & post_data_len , & xm ) ;
-		if( nret )
-		{
-			ErrorLog( __FILE__ , __LINE__ , "DSCDESERIALIZE_XML_xml_MsgType failed[%d] , xml[%s]" , nret , post_data );
-		}
-		else
-		{
-			InfoLog( __FILE__ , __LINE__ , "DSCDESERIALIZE_XML_xml_MsgType ok , xml[%s]" , post_data );
-		}
-		
-		
-		
 	}
 	
 	if( signature )
