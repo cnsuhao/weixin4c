@@ -50,7 +50,18 @@ int ReceiveText( char *post_data , int post_data_len , xml *p_req )
 	}
 	
 	memset( output_buffer , 0x00 , sizeof(output_buffer) );
-	if( strcmp( command , "ym" ) == 0 || strcmp( command , "yuming" ) == 0 || strcmp( command , "域名" ) == 0 )
+	if( strcmp( command , "?" ) == 0 || strcmp( command , "？" ) == 0 )
+	{
+		snprintf( output_buffer , sizeof(output_buffer)-1 ,
+			"1.实时查询域名注册信息 :（目前只支持.com域名）\n"
+			"  命令语法:\"[ym|yuming|域名] (域名)\"\n"
+			"  示例:\"ym google.com\"\n"
+			"  示例:\"yuming google.com\"\n"
+			"  示例:\"域名 google.com\"\n"
+			"（更多功能开发中...）"
+			);
+	}
+	else if( strcmp( command , "ym" ) == 0 || strcmp( command , "yuming" ) == 0 || strcmp( command , "域名" ) == 0 )
 	{
 		nret = ReceiveText_QueryDomain( params , output_buffer , sizeof(output_buffer) ) ;
 		if( nret )

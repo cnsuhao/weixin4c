@@ -69,7 +69,20 @@ int cgimain()
 				InfoLog( __FILE__ , __LINE__ , "DSCDESERIALIZE_XML_xml_MsgType ok , xml[%s]" , post_data );
 				
 				InfoLog( __FILE__ , __LINE__ , "req.MsgType[%s]" , req.MsgType );
-				if( strcmp( req.MsgType , "<![CDATA[text]]>" ) == 0 )
+				if( strcmp( req.MsgType , "<![CDATA[event]]>" ) == 0 )
+				{
+					nret = ReceiveEvent( post_data , post_data_len , & req ) ;
+					SetLogFile( HOME"/log/weixin4c.log" );
+					if( nret )
+					{
+						ErrorLog( __FILE__ , __LINE__ , "ReceiveEvent failed[%d]" , nret );
+					}
+					else
+					{
+						InfoLog( __FILE__ , __LINE__ , "ReceiveEvent ok" );
+					}
+				}
+				else if( strcmp( req.MsgType , "<![CDATA[text]]>" ) == 0 )
 				{
 					nret = ReceiveText( post_data , post_data_len , & req ) ;
 					SetLogFile( HOME"/log/weixin4c.log" );

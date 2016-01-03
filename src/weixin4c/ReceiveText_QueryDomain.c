@@ -331,7 +331,7 @@ int ReceiveText_QueryDomain( char *params , char *output_buffer , int output_buf
 			"赞助注册IANA ID : %.*s\n"
 			"WHOIS服务器 : %.*s\n"
 			"关联URL : %.*s\n"
-			"开始日期 : %s\n"
+			"注册日期 : %s\n"
 			"更新日期 : %s\n"
 			"过期日期 : %s\n"
 			, domain_name

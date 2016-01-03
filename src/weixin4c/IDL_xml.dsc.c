@@ -35,6 +35,9 @@ int DSCSERIALIZE_XML_xml( xml *pst , char *encoding , char *buf , int *p_len )
 	len=SNPRINTF(buf,remain_len,"	<Content>"); if(len<0||remain_len<len)return -1; buf+=len; remain_len-=len;
 	len=SNPRINTF(buf,remain_len,"%s",pst->Content); XMLESCAPE_EXPAND(buf,len,remain_len); if(len<0||remain_len<len)return -1;
 	len=SNPRINTF(buf,remain_len,"</Content>\n"); if(len<0||remain_len<len)return -1; buf+=len; remain_len-=len;
+	len=SNPRINTF(buf,remain_len,"	<Event>"); if(len<0||remain_len<len)return -1; buf+=len; remain_len-=len;
+	len=SNPRINTF(buf,remain_len,"%s",pst->Event); XMLESCAPE_EXPAND(buf,len,remain_len); if(len<0||remain_len<len)return -1;
+	len=SNPRINTF(buf,remain_len,"</Event>\n"); if(len<0||remain_len<len)return -1; buf+=len; remain_len-=len;
 	len=SNPRINTF(buf,remain_len,"	<MsgId>"); if(len<0||remain_len<len)return -1; buf+=len; remain_len-=len;
 	len=SNPRINTF(buf,remain_len,"%s",pst->MsgId); XMLESCAPE_EXPAND(buf,len,remain_len); if(len<0||remain_len<len)return -1;
 	len=SNPRINTF(buf,remain_len,"</MsgId>\n"); if(len<0||remain_len<len)return -1; buf+=len; remain_len-=len;
@@ -82,6 +85,10 @@ int CallbackOnXmlNode_xml( int type , char *xpath , int xpath_len , int xpath_si
 		if( xpath_len == 12 && strncmp( xpath , "/xml/Content" , xpath_len ) == 0 )
 		{XMLUNESCAPE_FOLD(content,content_len,pst->Content);
 		{if( content_len > sizeof(pst->Content)-1 ) return -7;}}
+		/* Event */
+		if( xpath_len == 10 && strncmp( xpath , "/xml/Event" , xpath_len ) == 0 )
+		{XMLUNESCAPE_FOLD(content,content_len,pst->Event);
+		{if( content_len > sizeof(pst->Event)-1 ) return -7;}}
 		/* MsgId */
 		if( xpath_len == 10 && strncmp( xpath , "/xml/MsgId" , xpath_len ) == 0 )
 		{XMLUNESCAPE_FOLD(content,content_len,pst->MsgId);

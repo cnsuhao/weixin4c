@@ -14,6 +14,8 @@ int cgiclean();
 int VerifyServer( char *signature , char *timestamp , char *nonce , char *echostr );
 int ReceiveText( char *post_data , int post_data_len , xml *p_req );
 
+int ReceiveEvent( char *post_data , int post_data_len , xml *p_req );
+
 int ReceiveText_QueryDomain( char *params , char *output_buffer , int output_bufsize );
 
 #endif

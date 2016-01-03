@@ -21,6 +21,7 @@ int FUNCNAME_DSCLOG_xml( xml *pst )
 	PREFIX_DSCLOG_xml "xml.CreateTime[%s]" NEWLINE_DSCLOG_xml , pst->CreateTime );
 	PREFIX_DSCLOG_xml "xml.MsgType[%s]" NEWLINE_DSCLOG_xml , pst->MsgType );
 	PREFIX_DSCLOG_xml "xml.Content[%s]" NEWLINE_DSCLOG_xml , pst->Content );
+	PREFIX_DSCLOG_xml "xml.Event[%s]" NEWLINE_DSCLOG_xml , pst->Event );
 	PREFIX_DSCLOG_xml "xml.MsgId[%s]" NEWLINE_DSCLOG_xml , pst->MsgId );
 	return 0;
 }

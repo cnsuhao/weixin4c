@@ -13,6 +13,7 @@ c_FILE		=	\
 			VerifyServer.c \
 			ReceiveText.c \
 			ReceiveText_QueryDomain.c \
+			ReceiveEvent.c \
 			IDL_xml.dsc.c \
 
 ###### 目标文件、安装目录配置区

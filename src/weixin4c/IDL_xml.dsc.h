@@ -88,6 +88,7 @@ typedef struct
 	char	CreateTime[ 20 + 1 ] ;
 	char	MsgType[ 64 + 1 ] ;
 	char	Content[ 4096 + 1 ] ;
+	char	Event[ 64 + 1 ] ;
 	char	MsgId[ 20 + 1 ] ;
 } xml ;
 

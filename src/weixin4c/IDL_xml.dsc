@@ -5,6 +5,7 @@ STRUCT	xml
 	STRING 20	CreateTime
 	STRING 64	MsgType
 	STRING 4096	Content
+	STRING 64	Event
 	STRING 20	MsgId
 }
 
