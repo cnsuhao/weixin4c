@@ -10,6 +10,8 @@
 #include <unistd.h>
 #include <time.h>
 
+#include <iconv.h>
+
 #include "LOGC.h"
 
 char *PUBStringNoEnter( char *str );
@@ -18,6 +20,10 @@ int PUBHexExpand( char *HexBuf , int HexBufLen , char *AscBuf );
 
 int PUBReadEntireFileSafely( char *filename , char *mode , char **pp_buf , long *p_file_size );
 int PUBWriteEntireFile( char *filename , char *mode , char *p_buf , long file_size );
+
+int PUBConvCharacterCodeEx( char *from_character_code , char *in_buf , int in_len , char *to_character_code , char *out_buf , int out_len );
+int PUBConvCharacterCode( char *from_character_code , char *to_character_code , char *buf , int len , int size );
+int PUBDupConvCharacterCode( char *from_character_code , char *to_character_code , char *buf , int len , char **out_dup );
 
 int PUBGetUrlParamPtr( char *key , char **pp_value , int *p_value_len );
 int PUBGetUrlParam( char *key , char *value , int value_size );

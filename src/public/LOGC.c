@@ -72,7 +72,7 @@ static int WriteLogBase( int log_level , char *c_filename , long c_fileline , ch
 	struct timeval	tv ;
 	struct tm	stime ;
 	
-	char		log_buffer[ 1024 + 1 ] ;
+	char		log_buffer[ 4096 * 10 + 1 ] ;
 	char		*log_bufptr = NULL ;
 	size_t		log_buflen ;
 	size_t		log_buf_remain_len ;
@@ -234,7 +234,7 @@ int DebugLog( char *c_filename , long c_fileline , char *format , ... )
 
 static int WriteHexLogBase( int log_level , char *c_filename , long c_fileline , char *buf , long buflen , char *format , va_list valist )
 {
-	char		hexlog_buffer[ 4096 * 10 + 1 ] ;
+	char		hexlog_buffer[ 4096 * 100 + 1 ] ;
 	char		*hexlog_bufptr = NULL ;
 	size_t		hexlog_buflen ;
 	size_t		hexlog_buf_remain_len ;

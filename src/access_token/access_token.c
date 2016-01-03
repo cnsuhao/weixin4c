@@ -137,7 +137,7 @@ static int AccessToken( int loop_flag )
 
 static void usage()
 {
-	printf( "USAGE : AccessToken [ 0 | 1 ]\n" );
+	printf( "USAGE : access_token [ 0 | 1 ]\n" );
 	printf( "                    0 : fetch once\n" );
 	printf( "                    1 : fetch for-ever\n" );
 	return;
@@ -145,7 +145,7 @@ static void usage()
 
 int main( int argc , char *argv[] )
 {
-	SetLogFile( HOME"/log/AccessToken.log" );
+	SetLogFile( HOME"/log/access_token.log" );
 	SetLogLevel( LOGLEVEL_DEBUG );
 	
 	if( argc == 1 + 1 )

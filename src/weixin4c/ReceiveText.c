@@ -4,6 +4,11 @@
 int ReceiveText( char *post_data , int post_data_len , xml *p_req )
 {
 	xml	rsp ;
+	int	n ;
+	char	*p = NULL ;
+	char	*command = NULL ;
+	char	*params = NULL ;
+	char	output_buffer[ 4096 * 90 ] ;
 	char	rsp_buffer[ 4096 * 100 ] ;
 	int	rsp_buflen ;
 	
@@ -14,12 +19,71 @@ int ReceiveText( char *post_data , int post_data_len , xml *p_req )
 	
 	InfoLog( __FILE__ , __LINE__ , "req xml[%.*s]" , post_data_len , post_data );
 	
+	InfoLog( __FILE__ , __LINE__ , "文本解码前[%s]" , p_req->Content );
+	n = PUBConvCharacterCode( "UTF-8" , "GB18030" , p_req->Content , -1 , sizeof(p_req->Content) );
+	if( n < 0 )
+	{
+		ErrorLog( __FILE__ , __LINE__ , "PUBConvCharacterCode failed[%d]" , n );
+		return -1;
+	}
+	InfoLog( __FILE__ , __LINE__ , "文本解码后[%s]" , p_req->Content );
+	
+	if( memcmp( p_req->Content , "<![CDATA[" , 9 ) == 0 )
+	{
+		int	len ;
+		len = strlen(p_req->Content) ;
+		p_req->Content[len-3] = '\0' ;
+		memmove( p_req->Content , p_req->Content+9 , len-3-9+1 );
+	}
+	
+	p = strchr( p_req->Content , ' ' ) ;
+	if( p == NULL )
+	{
+		command = p_req->Content ;
+		params = "" ;
+	}
+	else
+	{
+		(*p) = '\0' ;
+		command = p_req->Content ;
+		params = p + 1 ;
+	}
+	
+	memset( output_buffer , 0x00 , sizeof(output_buffer) );
+	if( strcmp( command , "ym" ) == 0 || strcmp( command , "yuming" ) == 0 || strcmp( command , "域名" ) == 0 )
+	{
+		nret = ReceiveText_QueryDomain( params , output_buffer , sizeof(output_buffer) ) ;
+		if( nret )
+		{
+			ErrorLog( __FILE__ , __LINE__ , "QueryDomain failed[%d]" , nret );
+			snprintf( output_buffer , sizeof(output_buffer)-1 , "查询失败" );
+		}
+		else
+		{
+			InfoLog( __FILE__ , __LINE__ , "QueryDomain ok" );
+		}
+	}
+	else
+	{
+		ErrorLog( __FILE__ , __LINE__ , "command[%s] invalid" , command );
+		snprintf( output_buffer , sizeof(output_buffer)-1 , "未知命令[%s]" , command );
+	}
+	
+	InfoLog( __FILE__ , __LINE__ , "文本编码前[%s]" , output_buffer );
+	n = PUBConvCharacterCode( "GB18030" , "UTF-8" , output_buffer , -1 , sizeof(output_buffer) );
+	if( n < 0 )
+	{
+		ErrorLog( __FILE__ , __LINE__ , "PUBConvCharacterCode failed[%d]" , n );
+		return -1;
+	}
+	InfoLog( __FILE__ , __LINE__ , "文本编码后[%s]" , output_buffer );
+	
 	memset( & rsp , 0x00 , sizeof(xml) );
 	strcpy( rsp.ToUserName , p_req->FromUserName );
 	strcpy( rsp.FromUserName , p_req->ToUserName );
 	snprintf( rsp.CreateTime , sizeof(rsp.CreateTime) , "%d" , (int)time(NULL) );
 	strcpy( rsp.MsgType , p_req->MsgType );
-	strcpy( rsp.Content , "<![CDATA[OK]]>" );
+	snprintf( rsp.Content , sizeof(rsp.Content)-1 , "<![CDATA[%s]]>" , output_buffer );
 	strcpy( rsp.MsgId , p_req->MsgId );
 	
 	memset( rsp_buffer , 0x00 , sizeof(rsp_buffer) );
