@@ -61,8 +61,7 @@ int ReceiveText( char *post_data , int post_data_len , xml *p_req )
 			"  示例:\"yuming google.com\"\n"
 			"  示例:\"域名 google.com\"\n"
 			"  示例:\"ym google\"\n"
-			"（更多生活类查询功能开发中...）\n"
-			"具体帮助请发送\"?\"获得。"
+			"（更多生活类查询功能开发中...）"
 			) ;
 	}
 	else if( strcmp( command , "ym" ) == 0 || strcmp( command , "yuming" ) == 0 || strcmp( command , "域名" ) == 0 )
