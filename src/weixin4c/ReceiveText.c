@@ -54,11 +54,12 @@ int ReceiveText( char *post_data , int post_data_len , xml *p_req )
 	{
 		memset( output_buffer , 0x00 , sizeof(output_buffer) );
 		output_buflen = snprintf( output_buffer , sizeof(output_buffer)-1 ,
-			"1.实时查询域名注册信息 :（目前只支持.com域名）\n"
-			"  命令语法:\"[ym|yuming|域名] (域名)\"\n"
+			"1.实时查询域名注册信息 :（目前支持.com .net .org .info .edu .biz .cn）\n"
+			"  命令语法:\"[ym|yuming|域名] [域名]\"\n"
 			"  示例:\"ym google.com\"\n"
 			"  示例:\"yuming google.com\"\n"
 			"  示例:\"域名 google.com\"\n"
+			"  示例:\"ym google\"\n"
 			"（更多功能开发中...）"
 			) ;
 	}
