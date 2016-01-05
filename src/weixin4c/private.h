@@ -16,7 +16,7 @@ int ReceiveText( char *post_data , int post_data_len , xml *p_req );
 
 int ReceiveEvent( char *post_data , int post_data_len , xml *p_req );
 
-int ReceiveText_QueryDomain( char *params , char *output_buffer , int output_bufsize );
+int ReceiveText_QueryDomain( char *params , char *output_buffer , int *p_output_buflen , int output_bufsize );
 
 #endif
 

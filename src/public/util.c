@@ -1,5 +1,8 @@
 #include "public.h"
 
+static char	*static_buffer = NULL ;
+int		static_bufsize = 0 ;
+
 char *PUBStringNoEnter( char *str )
 {
 	char	*ptr = NULL ;
@@ -161,6 +164,44 @@ int PUBConvCharacterCode( char *from_character_code , char *to_character_code , 
 	free( tmp );
 	
 	return converted;
+}
+
+char *PUBConvCharacterCodeStatic( char *from_character_code , char *to_character_code , char *buf , int len )
+{
+	int		converted ;
+	
+	if( len == -1 )
+		len = strlen( buf ) ;
+	
+	if( static_buffer == NULL )
+	{
+		static_bufsize = len * 2 ;
+		static_buffer = (char*)malloc( static_bufsize ) ;
+		if( static_buffer == NULL )
+			return NULL;
+	}
+	
+	memset( static_buffer , 0x00 , static_bufsize );
+	converted = PUBConvCharacterCodeEx( from_character_code , buf , len , to_character_code , static_buffer , static_bufsize-1 ) ;
+	if( converted >= 0 )
+	{
+		return static_buffer;
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
+void PUBFreeCharacterCodeStatic()
+{
+	if( static_buffer )
+	{
+		free( static_buffer ); static_buffer = NULL ;
+		static_bufsize = 0 ;
+	}
+	
+	return;
 }
 
 int PUBDupConvCharacterCode( char *from_character_code , char *to_character_code , char *buf , int len , char **out_dup )

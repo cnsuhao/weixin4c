@@ -9,6 +9,7 @@ int ReceiveText( char *post_data , int post_data_len , xml *p_req )
 	char	*command = NULL ;
 	char	*params = NULL ;
 	char	output_buffer[ 4096 * 90 ] ;
+	int	output_buflen ;
 	char	rsp_buffer[ 4096 * 100 ] ;
 	int	rsp_buflen ;
 	
@@ -49,25 +50,26 @@ int ReceiveText( char *post_data , int post_data_len , xml *p_req )
 		params = p + 1 ;
 	}
 	
-	memset( output_buffer , 0x00 , sizeof(output_buffer) );
 	if( strcmp( command , "?" ) == 0 || strcmp( command , "？" ) == 0 )
 	{
-		snprintf( output_buffer , sizeof(output_buffer)-1 ,
+		memset( output_buffer , 0x00 , sizeof(output_buffer) );
+		output_buflen = snprintf( output_buffer , sizeof(output_buffer)-1 ,
 			"1.实时查询域名注册信息 :（目前只支持.com域名）\n"
 			"  命令语法:\"[ym|yuming|域名] (域名)\"\n"
 			"  示例:\"ym google.com\"\n"
 			"  示例:\"yuming google.com\"\n"
 			"  示例:\"域名 google.com\"\n"
 			"（更多功能开发中...）"
-			);
+			) ;
 	}
 	else if( strcmp( command , "ym" ) == 0 || strcmp( command , "yuming" ) == 0 || strcmp( command , "域名" ) == 0 )
 	{
-		nret = ReceiveText_QueryDomain( params , output_buffer , sizeof(output_buffer) ) ;
+		memset( output_buffer , 0x00 , sizeof(output_buffer) );
+		output_buflen = 0 ;
+		nret = ReceiveText_QueryDomain( params , output_buffer , & output_buflen , sizeof(output_buffer) ) ;
 		if( nret )
 		{
 			ErrorLog( __FILE__ , __LINE__ , "QueryDomain failed[%d]" , nret );
-			snprintf( output_buffer , sizeof(output_buffer)-1 , "查询失败" );
 		}
 		else
 		{
@@ -77,11 +79,11 @@ int ReceiveText( char *post_data , int post_data_len , xml *p_req )
 	else
 	{
 		ErrorLog( __FILE__ , __LINE__ , "command[%s] invalid" , command );
-		snprintf( output_buffer , sizeof(output_buffer)-1 , "未知命令[%s]" , command );
+		output_buflen = snprintf( output_buffer , sizeof(output_buffer)-1 , "未知命令[%s]" , command ) ;
 	}
 	
 	InfoLog( __FILE__ , __LINE__ , "文本编码前[%s]" , output_buffer );
-	n = PUBConvCharacterCode( "GB18030" , "UTF-8" , output_buffer , -1 , sizeof(output_buffer) );
+	n = PUBConvCharacterCode( "GB18030" , "UTF-8" , output_buffer , output_buflen , sizeof(output_buffer) );
 	if( n < 0 )
 	{
 		ErrorLog( __FILE__ , __LINE__ , "PUBConvCharacterCode failed[%d]" , n );
