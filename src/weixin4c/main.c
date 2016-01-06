@@ -1,29 +1,41 @@
-#include "public.h"
-#include "private.h"
+#include "weixin4c.h"
 
 int main()
 {
-	int		nret = 0 ;
+	struct Environment	env , *penv = & env ;
+	int			init_flag = 0 ;
 	
-	nret = cgiinit() ;
-	if( nret )
-	{
-		ErrorLog( __FILE__ , __LINE__ , "cgiinit failed[%d]" , nret );
-		return -nret;
-	}
+	int			nret = 0 ;
+	
+	_setenv();
+	
+	memset( penv , 0x00 , sizeof(struct Environment) );
 	
 	while( FCGI_Accept() >= 0 )
 	{
-		nret = cgimain() ;
+		if( init_flag == 0 )
+		{
+			nret = cgiinit( penv ) ;
+			if( nret )
+			{
+				ErrorLog( __FILE__ , __LINE__ , "cgiinit failed[%d]" , nret );
+				return -nret;
+			}
+			
+			init_flag = 1 ;
+		}
+		
+		nret = cgimain( penv ) ;
 		if( nret )
 		{
 			ErrorLog( __FILE__ , __LINE__ , "cgimain failed[%d]" , nret );
+			nret = cgiclean( penv ) ;
 			return -nret;
 		}
 break;
 	}
 	
-	nret = cgiclean() ;
+	nret = cgiclean( penv ) ;
 	if( nret )
 	{
 		ErrorLog( __FILE__ , __LINE__ , "cgiclean failed[%d]" , nret );

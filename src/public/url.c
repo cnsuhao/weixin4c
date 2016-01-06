@@ -1,4 +1,4 @@
-#include "public.h"
+#include "weixin4c_public.h"
 
 int PUBGetUrlParamPtr( char *key , char **pp_value , int *p_value_len )
 {

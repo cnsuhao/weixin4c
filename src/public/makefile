@@ -9,17 +9,19 @@
 #@ c_FILE
 c_FILE		=	\
 			LOGC.c \
+			fasterxml.c \
 			util.c \
 			http.c \
 			url.c \
 
 ###### 目标文件、安装目录配置区
 include makeinstall
-LIB		=	libweixin4c.a
+LIB		=	libweixin4c_public.a
 LIBINST		=	$(_LIBINST)
 HDER		= \
 			LOGC.h \
-			public.h \
+			fasterxml.h \
+			weixin4c_public.h \
 
 HDERINST	=	$(_HDERINST)
 
@@ -46,6 +48,6 @@ CLEAN_ADDITION	=
 include $(MKTPLDIR)/makeobj_$(MKTPLOS).inc
 
 ###### 目标文件依赖关系
-libweixin4c.a		:	$(c_FILE_o)
+libweixin4c_public.a		:	$(c_FILE_o)
 	$(AR) $(ARFLAGS) $@ $(c_FILE_o)
 

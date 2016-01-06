@@ -12,14 +12,16 @@ c_FILE		=	\
 			cgimain.c \
 			VerifyServer.c \
 			ReceiveText.c \
-			ReceiveText_QueryDomain.c \
 			ReceiveEvent.c \
 			IDL_xml.dsc.c \
 
 ###### 目标文件、安装目录配置区
 include makeinstall
-BIN		=	weixin4c.fcgi
-BININST		=	$(_BININST)
+LIB		=	libweixin4c_mainframe.a
+LIBINST		=	$(_LIBINST)
+HDER		=	weixin4c_proc.h
+HDERINST	=	$(_HDERINST)
+
 
 ###### 编译选项
 CFLAGS		=	-D_DEFINE_FASTCGI_ \
@@ -31,7 +33,7 @@ CFLAGS		=	-D_DEFINE_FASTCGI_ \
 LFLAGS		=	$(_LFLAGS) \
 			-L$(HOME)/lib \
 			-lfasterxml \
-			-lweixin4c \
+			-lweixin4c_public \
 			-lcrypto \
 
 ###### 额外宏定义区
@@ -51,6 +53,6 @@ CLEAN_ADDITION	=
 include $(MKTPLDIR)/makeobj_$(MKTPLOS).inc
 
 ###### 目标文件依赖关系
-weixin4c.fcgi	:	$(c_FILE_o)
-	$(CC) -o $@ $(c_FILE_o) $(LFLAGS)
+libweixin4c_mainframe.a	:	$(c_FILE_o)
+	$(AR) $(ARFLAGS) $@ $(c_FILE_o)
 

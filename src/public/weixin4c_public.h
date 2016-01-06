@@ -6,10 +6,7 @@
 #include <string.h>
 #include <errno.h>
 #include <math.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <time.h>
-
+#include <dlfcn.h>
 #include <iconv.h>
 
 #include "LOGC.h"

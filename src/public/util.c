@@ -1,4 +1,4 @@
-#include "public.h"
+#include "weixin4c_public.h"
 
 static char	*static_buffer = NULL ;
 int		static_bufsize = 0 ;

@@ -1,17 +1,51 @@
-#include "public.h"
-#include "private.h"
+#include "weixin4c.h"
 
-int cgiinit()
+int cgiinit( struct Environment *penv )
 {
+	int		nret = 0 ;
+	
 	chdir( "/tmp" );
 	
-	SetLogFile( HOME"/log/weixin4c.log" );
+	SetLogFile( "%s/log/weixin4c.log" , getenv("HOME") );
 	SetLogLevel( LOGLEVEL_DEBUG );
+	
+	penv->so_handler = _dlopen() ;
+	if( penv->so_handler == NULL )
+	{
+		ErrorLog( __FILE__ , __LINE__ , "dlopen failed , dlerror[%s]" , dlerror() );
+		return -1;
+	}
+	else
+	{
+		InfoLog( __FILE__ , __LINE__ , "dlopen ok" );
+	}
+	
+	penv->funcs.pfuncInitEnvProc = dlsym( penv->so_handler , "InitEnvProc" ) ;
+	penv->funcs.pfuncCleanEnvProc = dlsym( penv->so_handler , "CleanEnvProc" ) ;
+	
+	penv->funcs.pfuncReceiveSubscribeEventProc = dlsym( penv->so_handler , "ReceiveSubscribeEventProc" ) ;
+	penv->funcs.pfuncReceiveUnsubscribeEventProc = dlsym( penv->so_handler , "ReceiveUnsubscribeEventProc" ) ;
+	penv->funcs.pfuncReceiveTextMsgProc = dlsym( penv->so_handler , "ReceiveTextMsgProc" ) ;
+	
+	if( penv->funcs.pfuncInitEnvProc )
+	{
+		nret = penv->funcs.pfuncInitEnvProc() ;
+		if( nret )
+		{
+			ErrorLog( __FILE__ , __LINE__ , "pfuncInitEnvProc failed[%d]" , nret );
+			dlclose( penv->so_handler );
+			return -2;
+		}
+		else
+		{
+			InfoLog( __FILE__ , __LINE__ , "pfuncInitEnvProc ok" );
+		}
+	}
 	
 	return 0;
 }
 
-int cgimain()
+int cgimain( struct Environment *penv )
 {
 	char		*signature = NULL ;
 	char		*timestamp = NULL ;
@@ -33,8 +67,9 @@ int cgimain()
 	
 	if( signature && timestamp && nonce && echostr )
 	{
-		nret = VerifyServer( signature , timestamp , nonce , echostr ) ;
-		SetLogFile( HOME"/log/weixin4c.log" );
+		SetLogFile( "%s/log/VerifyServer.log" , getenv("HOME") );
+		nret = VerifyServer( penv , signature , timestamp , nonce , echostr ) ;
+		SetLogFile( "%s/log/weixin4c.log" , getenv("HOME") );
 		if( nret )
 		{
 			ErrorLog( __FILE__ , __LINE__ , "VerifyServer failed[%d]" , nret );
@@ -71,8 +106,9 @@ int cgimain()
 				InfoLog( __FILE__ , __LINE__ , "req.MsgType[%s]" , req.MsgType );
 				if( strcmp( req.MsgType , "<![CDATA[event]]>" ) == 0 )
 				{
-					nret = ReceiveEvent( post_data , post_data_len , & req ) ;
-					SetLogFile( HOME"/log/weixin4c.log" );
+					SetLogFile( "%s/log/ReceiveEvent.log" , getenv("HOME") );
+					nret = ReceiveEvent( penv , post_data , post_data_len , & req ) ;
+					SetLogFile( "%s/log/weixin4c.log" , getenv("HOME") );
 					if( nret )
 					{
 						ErrorLog( __FILE__ , __LINE__ , "ReceiveEvent failed[%d]" , nret );
@@ -84,8 +120,9 @@ int cgimain()
 				}
 				else if( strcmp( req.MsgType , "<![CDATA[text]]>" ) == 0 )
 				{
-					nret = ReceiveText( post_data , post_data_len , & req ) ;
-					SetLogFile( HOME"/log/weixin4c.log" );
+					SetLogFile( "%s/log/ReceiveText.log" , getenv("HOME") );
+					nret = ReceiveText( penv , post_data , post_data_len , & req ) ;
+					SetLogFile( "%s/log/weixin4c.log" , getenv("HOME") );
 					if( nret )
 					{
 						ErrorLog( __FILE__ , __LINE__ , "ReceiveText failed[%d]" , nret );
@@ -115,8 +152,30 @@ int cgimain()
 	return nret;
 }
 
-int cgiclean()
+int cgiclean( struct Environment *penv )
 {
+	int		nret = 0 ;
+	
+	if( penv->funcs.pfuncCleanEnvProc )
+	{
+		nret = penv->funcs.pfuncCleanEnvProc() ;
+		if( nret )
+		{
+			ErrorLog( __FILE__ , __LINE__ , "pfuncCleanEnvProc failed[%d]" , nret );
+		}
+		else
+		{
+			InfoLog( __FILE__ , __LINE__ , "pfuncCleanEnvProc ok" );
+		}
+	}
+	
+	if( penv->so_handler )
+	{
+		InfoLog( __FILE__ , __LINE__ , "dlclose ok" );
+		dlclose( penv->so_handler );
+		penv->so_handler = NULL ;
+	}
+	
 	return 0;
 }
 

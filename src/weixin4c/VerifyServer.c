@@ -1,12 +1,11 @@
-#include "public.h"
-#include "private.h"
+#include "weixin4c.h"
 
 static int sort_strcmp( const void *p1 , const void *p2 )
 {
 	return strcmp((char*)p1,(char*)p2);
 }
 
-int VerifyServer( char *signature , char *timestamp , char *nonce , char *echostr )
+int VerifyServer( struct Environment *penv , char *signature , char *timestamp , char *nonce , char *echostr )
 {
 	char	*token = NULL ;
 	
@@ -16,9 +15,6 @@ int VerifyServer( char *signature , char *timestamp , char *nonce , char *echost
 	char	result[ SHA_DIGEST_LENGTH * 2 + 1 ] ;
 	char	result_exp[ SHA_DIGEST_LENGTH * 2 + 1 ] ;
 	int	result_exp_len ;
-	
-	SetLogFile( HOME"/log/VerifyServer.log" );
-	SetLogLevel( LOGLEVEL_DEBUG );
 	
 	InfoLog( __FILE__ , __LINE__ , "--- plistQuery ---" );
 	InfoLog( __FILE__ , __LINE__ , "signature[%s]" , signature );

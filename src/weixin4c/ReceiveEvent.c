@@ -1,48 +1,46 @@
-#include "public.h"
-#include "private.h"
+#include "weixin4c.h"
 
-int ReceiveEvent( char *post_data , int post_data_len , xml *p_req )
+int ReceiveEvent( struct Environment *penv , char *post_data , int post_data_len , xml *p_req )
 {
 	xml	rsp ;
-	char	output_buffer[ 4096 * 90 ] ;
-	int	n ;
-	char	rsp_buffer[ 4096 * 100 ] ;
+	char	output_buffer[ 4096 * 100 ] ;
+	int	output_buflen ;
+	char	rsp_buffer[ 4096 * 110 ] ;
 	int	rsp_buflen ;
 	
 	int	nret = 0 ;
 	
-	SetLogFile( HOME"/log/ReceiveEvent.log" );
-	SetLogLevel( LOGLEVEL_DEBUG );
-	
 	InfoLog( __FILE__ , __LINE__ , "req xml[%.*s]" , post_data_len , post_data );
+	
+	memset( output_buffer , 0x00 , sizeof(output_buffer) );
+	output_buflen = 0 ;
 	
 	if( strcmp( p_req->Event , "<![CDATA[subscribe]]>" ) == 0 )
 	{
-		snprintf( output_buffer , sizeof(output_buffer)-1 ,
-			"欢迎订阅\n"
-			"\"钛搜索\"提供众多公共信息实时查询\n"
-			"目前已提供:\n"
-			"    .com域名实时查询注册信息，如发送\"ym google.com\"即可\n"
-			"   （更多功能开发中...）\n"
-			"具体帮助请发送\"?\"获得。"
-			);
+		if( penv->funcs.pfuncReceiveSubscribeEventProc )
+		{
+			nret = penv->funcs.pfuncReceiveSubscribeEventProc( output_buffer , & output_buflen , sizeof(output_buffer) ) ;
+			if( nret )
+			{
+				ErrorLog( __FILE__ , __LINE__ , "pfuncReceiveSubscribeEventProc failed , errno[%d]" , errno );
+			}
+		}
 	}
 	else if( strcmp( p_req->Event , "<![CDATA[unsubscribe]]>" ) == 0 )
 	{
+		if( penv->funcs.pfuncReceiveUnsubscribeEventProc )
+		{
+			nret = penv->funcs.pfuncReceiveUnsubscribeEventProc( output_buffer , & output_buflen , sizeof(output_buffer) ) ;
+			if( nret )
+			{
+				ErrorLog( __FILE__ , __LINE__ , "pfuncReceiveUnsubscribeEventProc failed , errno[%d]" , errno );
+			}
+		}
 	}
 	else
 	{
-		snprintf( output_buffer , sizeof(output_buffer)-1 , "未知的事件类型[%s]" , p_req->Event );
+		output_buflen += snprintf( output_buffer+output_buflen , sizeof(output_buffer)-1 - output_buflen , "未知的事件类型[%s]" , p_req->Event );
 	}
-	
-	InfoLog( __FILE__ , __LINE__ , "文本编码前[%s]" , output_buffer );
-	n = PUBConvCharacterCode( "GB18030" , "UTF-8" , output_buffer , -1 , sizeof(output_buffer) );
-	if( n < 0 )
-	{
-		ErrorLog( __FILE__ , __LINE__ , "PUBConvCharacterCode failed[%d]" , n );
-		return -1;
-	}
-	InfoLog( __FILE__ , __LINE__ , "文本编码后[%s]" , output_buffer );
 	
 	memset( & rsp , 0x00 , sizeof(xml) );
 	strcpy( rsp.ToUserName , p_req->FromUserName );
