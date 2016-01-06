@@ -10,9 +10,12 @@
 c_FILE		=	\
 			LOGC.c \
 			fasterxml.c \
+			fasterjson.c \
 			util.c \
 			http.c \
 			url.c \
+			file.c \
+			encoding.c \
 
 ###### 目标文件、安装目录配置区
 include makeinstall
@@ -21,6 +24,7 @@ LIBINST		=	$(_LIBINST)
 HDER		= \
 			LOGC.h \
 			fasterxml.h \
+			fasterjson.h \
 			weixin4c_public.h \
 
 HDERINST	=	$(_HDERINST)

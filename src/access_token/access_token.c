@@ -1,4 +1,4 @@
-#include "public.h"
+#include "weixin4c_public.h"
 
 #include "curl/curl.h"
 

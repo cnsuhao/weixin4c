@@ -19,13 +19,11 @@ BININST		=	$(_BININST)
 ###### 编译选项
 CFLAGS		=	$(_CFLAGS) \
 			-I$(HOME)/include/weixin4c \
-			-I$(HOME)/include/fasterjson \
 
 ###### 链接选项
 LFLAGS		=	$(_LFLAGS) \
 			-L$(HOME)/lib \
-			-lweixin4c \
-			-lfasterjson \
+			-lweixin4c_public \
 			-lfcgi \
 			-lcurl \
 
