@@ -1,11 +1,12 @@
-#include "weixin4c.h"
+#include "weixin4c_public.h"
+#include "weixin4c_private.h"
 
 static int sort_strcmp( const void *p1 , const void *p2 )
 {
 	return strcmp((char*)p1,(char*)p2);
 }
 
-int VerifyServer( struct Environment *penv , char *signature , char *timestamp , char *nonce , char *echostr )
+int VerifyServer( struct Weixin4cEnv *penv , char *signature , char *timestamp , char *nonce , char *echostr )
 {
 	char	*token = NULL ;
 	

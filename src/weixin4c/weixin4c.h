@@ -1,34 +1,38 @@
-#ifndef _H_PRIVATE_
-#define _H_PRIVATE_
+#ifndef _H_WEIXIN4C_PROC_
+#define _H_WEIXIN4C_PROC_
 
 #include "weixin4c_public.h"
-#include "weixin4c_proc.h"
 
-#include "openssl/sha.h"
+typedef int funcInitEnvProc();
+typedef int funcCleanEnvProc();
+funcInitEnvProc InitEnvProc ;
+funcCleanEnvProc CleanEnvProc ;
 
-#include "IDL_xml.dsc.h"
+typedef int funcReceiveSubscribeEventProc( char *output_buffer , int *p_output_buflen , int output_bufsize );
+typedef int funcReceiveUnsubscribeEventProc( char *output_buffer , int *p_output_buflen , int output_bufsize );
+typedef int funcReceiveTextProc( char *input_buffer , int input_buflen , int input_bufsize , char *output_buffer , int *p_output_buflen , int output_bufsize );
+funcReceiveSubscribeEventProc ReceiveSubscribeEventProc ;
+funcReceiveUnsubscribeEventProc ReceiveUnsubscribeEventProc ;
+funcReceiveTextProc ReceiveTextProc ;
 
-struct Environment
+struct Weixin4cProcFuncs
 {
-	void		*so_handler ;
-	struct ProcFuncs
-	{
-		funcInitEnvProc			*pfuncInitEnvProc ;
-		funcCleanEnvProc		*pfuncCleanEnvProc ;
-		
-		funcReceiveSubscribeEventProc	*pfuncReceiveSubscribeEventProc ;
-		funcReceiveUnsubscribeEventProc	*pfuncReceiveUnsubscribeEventProc ;
-		funcReceiveTextMsgProc		*pfuncReceiveTextMsgProc ;
-	} funcs ;
+	funcInitEnvProc			*pfuncInitEnvProc ;
+	funcCleanEnvProc		*pfuncCleanEnvProc ;
+	
+	funcReceiveSubscribeEventProc	*pfuncReceiveSubscribeEventProc ;
+	funcReceiveUnsubscribeEventProc	*pfuncReceiveUnsubscribeEventProc ;
+	funcReceiveTextProc		*pfuncReceiveTextProc ;
 } ;
 
-int cgiinit( struct Environment *penv );
-int cgimain( struct Environment *penv );
-int cgiclean( struct Environment *penv );
+struct Weixin4cConfig
+{
+	char				*home ;
+	
+	struct Weixin4cProcFuncs	funcs ;
+} ;
 
-int VerifyServer( struct Environment *penv , char *signature , char *timestamp , char *nonce , char *echostr );
-int ReceiveEvent( struct Environment *penv , char *post_data , int post_data_len , xml *p_req );
-int ReceiveText( struct Environment *penv , char *post_data , int post_data_len , xml *p_req );
+int weixin4c( struct Weixin4cConfig *pconf );
 
 #endif
 

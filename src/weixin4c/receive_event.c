@@ -1,6 +1,7 @@
-#include "weixin4c.h"
+#include "weixin4c_public.h"
+#include "weixin4c_private.h"
 
-int ReceiveEvent( struct Environment *penv , char *post_data , int post_data_len , xml *p_req )
+int ReceiveEvent( struct Weixin4cEnv *penv , char *post_data , int post_data_len , xml *p_req )
 {
 	xml	rsp ;
 	char	output_buffer[ 4096 * 100 ] ;
@@ -17,9 +18,9 @@ int ReceiveEvent( struct Environment *penv , char *post_data , int post_data_len
 	
 	if( strcmp( p_req->Event , "<![CDATA[subscribe]]>" ) == 0 )
 	{
-		if( penv->funcs.pfuncReceiveSubscribeEventProc )
+		if( penv->pconf->funcs.pfuncReceiveSubscribeEventProc )
 		{
-			nret = penv->funcs.pfuncReceiveSubscribeEventProc( output_buffer , & output_buflen , sizeof(output_buffer) ) ;
+			nret = penv->pconf->funcs.pfuncReceiveSubscribeEventProc( output_buffer , & output_buflen , sizeof(output_buffer) ) ;
 			if( nret )
 			{
 				ErrorLog( __FILE__ , __LINE__ , "pfuncReceiveSubscribeEventProc failed , errno[%d]" , errno );
@@ -28,9 +29,9 @@ int ReceiveEvent( struct Environment *penv , char *post_data , int post_data_len
 	}
 	else if( strcmp( p_req->Event , "<![CDATA[unsubscribe]]>" ) == 0 )
 	{
-		if( penv->funcs.pfuncReceiveUnsubscribeEventProc )
+		if( penv->pconf->funcs.pfuncReceiveUnsubscribeEventProc )
 		{
-			nret = penv->funcs.pfuncReceiveUnsubscribeEventProc( output_buffer , & output_buflen , sizeof(output_buffer) ) ;
+			nret = penv->pconf->funcs.pfuncReceiveUnsubscribeEventProc( output_buffer , & output_buflen , sizeof(output_buffer) ) ;
 			if( nret )
 			{
 				ErrorLog( __FILE__ , __LINE__ , "pfuncReceiveUnsubscribeEventProc failed , errno[%d]" , errno );

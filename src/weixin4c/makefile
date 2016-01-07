@@ -8,18 +8,17 @@
 ###### 源文件配置区
 #@ c_FILE
 c_FILE		=	\
-			main.c \
-			cgimain.c \
-			VerifyServer.c \
-			ReceiveText.c \
-			ReceiveEvent.c \
+			weixin4c.c \
+			verify_server.c \
+			receive_text.c \
+			receive_event.c \
 			IDL_xml.dsc.c \
 
 ###### 目标文件、安装目录配置区
 include makeinstall
-LIB		=	libweixin4c_mainframe.a
+LIB		=	libweixin4c.a
 LIBINST		=	$(_LIBINST)
-HDER		=	weixin4c_proc.h
+HDER		=	weixin4c.h
 HDERINST	=	$(_HDERINST)
 
 
@@ -53,6 +52,6 @@ CLEAN_ADDITION	=
 include $(MKTPLDIR)/makeobj_$(MKTPLOS).inc
 
 ###### 目标文件依赖关系
-libweixin4c_mainframe.a	:	$(c_FILE_o)
+libweixin4c.a	:	$(c_FILE_o)
 	$(AR) $(ARFLAGS) $@ $(c_FILE_o)
 

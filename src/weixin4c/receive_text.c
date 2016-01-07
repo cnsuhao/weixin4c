@@ -1,6 +1,7 @@
-#include "weixin4c.h"
+#include "weixin4c_public.h"
+#include "weixin4c_private.h"
 
-int ReceiveText( struct Environment *penv , char *post_data , int post_data_len , xml *p_req )
+int ReceiveText( struct Weixin4cEnv *penv , char *post_data , int post_data_len , xml *p_req )
 {
 	xml	rsp ;
 	char	output_buffer[ 4096 * 100 ] ;
@@ -22,16 +23,14 @@ int ReceiveText( struct Environment *penv , char *post_data , int post_data_len 
 	
 	memset( output_buffer , 0x00 , sizeof(output_buffer) );
 	output_buflen = 0 ;
-InfoLog( __FILE__ , __LINE__ , "" );
-	nret = penv->funcs.pfuncReceiveTextMsgProc( p_req->Content , strlen(p_req->Content) , sizeof(p_req->Content) , output_buffer , & output_buflen , sizeof(output_buffer) ) ;
-InfoLog( __FILE__ , __LINE__ , "" );
+	nret = penv->pconf->funcs.pfuncReceiveTextProc( p_req->Content , strlen(p_req->Content) , sizeof(p_req->Content) , output_buffer , & output_buflen , sizeof(output_buffer) ) ;
 	if( nret )
 	{
-		ErrorLog( __FILE__ , __LINE__ , "pfuncReceiveTextMsgProc failed[%d]" , nret );
+		ErrorLog( __FILE__ , __LINE__ , "pfuncReceiveTextProc failed[%d]" , nret );
 	}
 	else
 	{
-		InfoLog( __FILE__ , __LINE__ , "pfuncReceiveTextMsgProc ok" );
+		InfoLog( __FILE__ , __LINE__ , "pfuncReceiveTextProc ok" );
 	}
 	
 	memset( & rsp , 0x00 , sizeof(xml) );
