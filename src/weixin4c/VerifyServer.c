@@ -8,6 +8,7 @@ static int sort_strcmp( const void *p1 , const void *p2 )
 
 int VerifyServer( struct Weixin4cEnv *penv , char *signature , char *timestamp , char *nonce , char *echostr )
 {
+	char	etc_pathfilename[ 256 + 1 ] ;
 	char	*token = NULL ;
 	
 	char	array[3][64] ;
@@ -24,7 +25,9 @@ int VerifyServer( struct Weixin4cEnv *penv , char *signature , char *timestamp ,
 	InfoLog( __FILE__ , __LINE__ , "echostr  [%s]" , echostr );
 	InfoLog( __FILE__ , __LINE__ , "------------------" );
 	
-	PUBReadEntireFileSafely( ETC_PATHFILENAME_Token , "r" , & token , NULL );
+	memset( etc_pathfilename , 0x00 , sizeof(etc_pathfilename) );
+	snprintf( etc_pathfilename , sizeof(etc_pathfilename)-1 , "%s/etc/%s/Token" , penv->pconf->home , penv->pconf->project_name );
+	PUBReadEntireFileSafely( etc_pathfilename , "r" , & token , NULL );
 	PUBStringNoEnter( token );
 	
 	strcpy( array[0] , token );

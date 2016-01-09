@@ -23,6 +23,8 @@ char *PUBStringNoEnter( char *str );
 
 int PUBHexExpand( char *HexBuf , int HexBufLen , char *AscBuf );
 
+void TakeoffCDATA( char *str_with_cdata );
+
 int PUBReadEntireFileSafely( char *filename , char *mode , char **pp_buf , long *p_file_size );
 int PUBWriteEntireFile( char *filename , char *mode , char *p_buf , long file_size );
 
@@ -43,14 +45,6 @@ int PUBReadPostBuffer();
 char *PUBGetPostBufferPtr();
 int PUBGetPostBufferLength();
 void PUBFreePostBuffer();
-
-#define HOME				"/home/calvin"
-
-#define ETC_PATHFILENAME_AppID		HOME"/etc/weixin4c/AppID"
-#define ETC_PATHFILENAME_AppSecret	HOME"/etc/weixin4c/AppSecret"
-#define ETC_PATHFILENAME_EncodingAESKey	HOME"/etc/weixin4c/EncodingAESKey"
-#define ETC_PATHFILENAME_Token		HOME"/etc/weixin4c/Token"
-#define ETC_PATHFILENAME_AccessToken	HOME"/etc/weixin4c/AccessToken"
 
 #endif
 

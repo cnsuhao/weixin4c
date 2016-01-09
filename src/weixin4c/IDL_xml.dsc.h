@@ -85,10 +85,22 @@ typedef struct
 {
 	char	ToUserName[ 256 + 1 ] ;
 	char	FromUserName[ 256 + 1 ] ;
-	char	CreateTime[ 20 + 1 ] ;
+	int	CreateTime ;
 	char	MsgType[ 64 + 1 ] ;
 	char	Content[ 4096 + 1 ] ;
 	char	Event[ 64 + 1 ] ;
+	char	PicUrl[ 1024 + 1 ] ;
+	char	MediaId[ 40 + 1 ] ;
+	char	Format[ 16 + 1 ] ;
+	char	Recognition[ 1024 + 1 ] ;
+	char	ThumbMediaId[ 40 + 1 ] ;
+	double	Location_X ;
+	double	Location_Y ;
+	int	Scale ;
+	char	Label[ 1024 + 1 ] ;
+	char	Title[ 256 + 1 ] ;
+	char	Description[ 1024 + 1 ] ;
+	char	Url[ 1024 + 1 ] ;
 	char	MsgId[ 20 + 1 ] ;
 } xml ;
 

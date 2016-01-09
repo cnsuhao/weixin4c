@@ -8,38 +8,24 @@
 ###### 源文件配置区
 #@ c_FILE
 c_FILE		=	\
-			weixin4c.c \
-			VerifyServer.c \
-			ReceiveEvent.c \
-			ReceiveText.c \
-			ReceiveImage.c \
-			ReceiveVoice.c \
-			ReceiveVideo.c \
-			ReceiveShortVideo.c \
-			ReceiveLocation.c \
-			ReceiveLink.c \
-			IDL_xml.dsc.c \
+			accesstoken.c \
+			IDL_accesstoken.dsc.c \
 
 ###### 目标文件、安装目录配置区
 include makeinstall
-LIB		=	libweixin4c.a
-LIBINST		=	$(_LIBINST)
-HDER		=	weixin4c.h IDL_xml.dsc.h
-HDERINST	=	$(_HDERINST)
-
+BIN		=	accesstoken
+BININST		=	$(_BININST)
 
 ###### 编译选项
-CFLAGS		=	-D_DEFINE_FASTCGI_ \
-			$(_CFLAGS) \
-			-I$(HOME)/include/fasterxml \
+CFLAGS		=	$(_CFLAGS) \
 			-I$(HOME)/include/weixin4c \
 
 ###### 链接选项
 LFLAGS		=	$(_LFLAGS) \
 			-L$(HOME)/lib \
-			-lfasterxml \
 			-lweixin4c_public \
-			-lcrypto \
+			-lfcgi \
+			-lcurl \
 
 ###### 额外宏定义区
 CLEAN_ADDITION	=
@@ -58,6 +44,6 @@ CLEAN_ADDITION	=
 include $(MKTPLDIR)/makeobj_$(MKTPLOS).inc
 
 ###### 目标文件依赖关系
-libweixin4c.a	:	$(c_FILE_o)
-	$(AR) $(ARFLAGS) $@ $(c_FILE_o)
+accesstoken	:	$(c_FILE_o)
+	$(CC) -o $@ $(c_FILE_o) $(LFLAGS)
 

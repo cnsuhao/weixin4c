@@ -36,3 +36,16 @@ int PUBHexExpand( char *HexBuf , int HexBufLen , char *AscBuf )
 	return(0);
 }
 
+void TakeoffCDATA( char *str_with_cdata )
+{
+	if( memcmp( str_with_cdata , "<![CDATA[" , 9 ) == 0 )
+	{
+		int	len ;
+		len = strlen(str_with_cdata) ;
+		str_with_cdata[len-3] = '\0' ;
+		memmove( str_with_cdata , str_with_cdata+9 , len-3-9+1 );
+	}
+	
+	return;
+}
+

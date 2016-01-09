@@ -9,7 +9,7 @@ MAKEFILE_POSTFIX=.Linux
 
 ###### всд©б╪еДжцгЬ
 DIROBJS		= \
-			access_token \
+			accesstoken \
 			public \
 			weixin4c \
 

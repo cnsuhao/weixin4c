@@ -1,7 +1,7 @@
 #include "weixin4c_public.h"
 #include "weixin4c_private.h"
 
-int ReceiveText( struct Weixin4cEnv *penv , char *post_data , int post_data_len , xml *p_req )
+int ReceiveVideo( struct Weixin4cEnv *penv , char *post_data , int post_data_len , xml *p_req )
 {
 	xml	rsp ;
 	char	output_buffer[ 4096 * 100 ] ;
@@ -13,33 +13,31 @@ int ReceiveText( struct Weixin4cEnv *penv , char *post_data , int post_data_len 
 	
 	InfoLog( __FILE__ , __LINE__ , "req xml[%.*s]" , post_data_len , post_data );
 	
-	if( memcmp( p_req->Content , "<![CDATA[" , 9 ) == 0 )
-	{
-		int	len ;
-		len = strlen(p_req->Content) ;
-		p_req->Content[len-3] = '\0' ;
-		memmove( p_req->Content , p_req->Content+9 , len-3-9+1 );
-	}
+	TakeoffCDATA( p_req->ToUserName );
+	TakeoffCDATA( p_req->FromUserName );
+	TakeoffCDATA( p_req->MediaId );
+	TakeoffCDATA( p_req->ThumbMediaId );
 	
 	memset( output_buffer , 0x00 , sizeof(output_buffer) );
 	output_buflen = 0 ;
-	nret = penv->pconf->funcs.pfuncReceiveTextProc( p_req->Content , strlen(p_req->Content) , sizeof(p_req->Content) , output_buffer , & output_buflen , sizeof(output_buffer) ) ;
-	if( nret )
+	if( penv->pconf->funcs.pfuncReceiveVideoProc )
 	{
-		ErrorLog( __FILE__ , __LINE__ , "pfuncReceiveTextProc failed[%d]" , nret );
-	}
-	else
-	{
-		InfoLog( __FILE__ , __LINE__ , "pfuncReceiveTextProc ok" );
+		nret = penv->pconf->funcs.pfuncReceiveVideoProc( p_req , output_buffer , & output_buflen , sizeof(output_buffer) ) ;
+		if( nret )
+		{
+			ErrorLog( __FILE__ , __LINE__ , "pfuncReceiveVideoProc failed[%d]" , nret );
+		}
+		else
+		{
+			InfoLog( __FILE__ , __LINE__ , "pfuncReceiveVideoProc ok" );
+		}
 	}
 	
 	memset( & rsp , 0x00 , sizeof(xml) );
-	strcpy( rsp.ToUserName , p_req->FromUserName );
-	strcpy( rsp.FromUserName , p_req->ToUserName );
-	snprintf( rsp.CreateTime , sizeof(rsp.CreateTime) , "%d" , (int)time(NULL) );
+	snprintf( rsp.ToUserName , sizeof(rsp.ToUserName)-1 , "<![CDATA[%s]]>" , p_req->FromUserName );
+	snprintf( rsp.FromUserName , sizeof(rsp.FromUserName)-1 , "<![CDATA[%s]]>" , p_req->ToUserName );
+	rsp.CreateTime = (int)time(NULL) ;
 	strcpy( rsp.MsgType , p_req->MsgType );
-	snprintf( rsp.Content , sizeof(rsp.Content)-1 , "<![CDATA[%s]]>" , output_buffer );
-	strcpy( rsp.MsgId , p_req->MsgId );
 	
 	memset( rsp_buffer , 0x00 , sizeof(rsp_buffer) );
 	rsp_buflen = sizeof(rsp_buffer) - 1 ;

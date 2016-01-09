@@ -16,37 +16,19 @@ int ReceiveEvent( struct Weixin4cEnv *penv , char *post_data , int post_data_len
 	memset( output_buffer , 0x00 , sizeof(output_buffer) );
 	output_buflen = 0 ;
 	
-	if( strcmp( p_req->Event , "<![CDATA[subscribe]]>" ) == 0 )
+	if( penv->pconf->funcs.pfuncReceiveEventProc )
 	{
-		if( penv->pconf->funcs.pfuncReceiveSubscribeEventProc )
+		nret = penv->pconf->funcs.pfuncReceiveEventProc( p_req , output_buffer , & output_buflen , sizeof(output_buffer) ) ;
+		if( nret )
 		{
-			nret = penv->pconf->funcs.pfuncReceiveSubscribeEventProc( output_buffer , & output_buflen , sizeof(output_buffer) ) ;
-			if( nret )
-			{
-				ErrorLog( __FILE__ , __LINE__ , "pfuncReceiveSubscribeEventProc failed , errno[%d]" , errno );
-			}
+			ErrorLog( __FILE__ , __LINE__ , "pfuncReceiveEventProc failed , errno[%d]" , errno );
 		}
-	}
-	else if( strcmp( p_req->Event , "<![CDATA[unsubscribe]]>" ) == 0 )
-	{
-		if( penv->pconf->funcs.pfuncReceiveUnsubscribeEventProc )
-		{
-			nret = penv->pconf->funcs.pfuncReceiveUnsubscribeEventProc( output_buffer , & output_buflen , sizeof(output_buffer) ) ;
-			if( nret )
-			{
-				ErrorLog( __FILE__ , __LINE__ , "pfuncReceiveUnsubscribeEventProc failed , errno[%d]" , errno );
-			}
-		}
-	}
-	else
-	{
-		output_buflen += snprintf( output_buffer+output_buflen , sizeof(output_buffer)-1 - output_buflen , "未知的事件类型[%s]" , p_req->Event );
 	}
 	
 	memset( & rsp , 0x00 , sizeof(xml) );
-	strcpy( rsp.ToUserName , p_req->FromUserName );
-	strcpy( rsp.FromUserName , p_req->ToUserName );
-	snprintf( rsp.CreateTime , sizeof(rsp.CreateTime) , "%d" , (int)time(NULL) );
+	snprintf( rsp.ToUserName , sizeof(rsp.ToUserName)-1 , "<![CDATA[%s]]>" , p_req->FromUserName );
+	snprintf( rsp.FromUserName , sizeof(rsp.FromUserName)-1 , "<![CDATA[%s]]>" , p_req->ToUserName );
+	rsp.CreateTime = (int)time(NULL) ;
 	strcpy( rsp.MsgType , "<![CDATA[text]]>" );
 	snprintf( rsp.Content , sizeof(rsp.Content)-1 , "<![CDATA[%s]]>" , output_buffer );
 	

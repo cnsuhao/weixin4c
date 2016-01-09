@@ -7,13 +7,19 @@
 
 ###### 源文件配置区
 #@ c_FILE
-c_FILE		=	\
-			access_token.c \
-			IDL_access_token.dsc.c \
+c_FILE		=	demo.c \
+			ReceiveEventProc.c \
+			ReceiveTextProc.c \
+			ReceiveImageProc.c \
+			ReceiveVoiceProc.c \
+			ReceiveVideoProc.c \
+			ReceiveShortVideoProc.c \
+			ReceiveLocationProc.c \
+			ReceiveLinkProc.c \
 
 ###### 目标文件、安装目录配置区
 include makeinstall
-BIN		=	access_token
+BIN		=	demo.fcgi
 BININST		=	$(_BININST)
 
 ###### 编译选项
@@ -23,6 +29,7 @@ CFLAGS		=	$(_CFLAGS) \
 ###### 链接选项
 LFLAGS		=	$(_LFLAGS) \
 			-L$(HOME)/lib \
+			-lweixin4c \
 			-lweixin4c_public \
 			-lfcgi \
 			-lcurl \
@@ -34,16 +41,14 @@ CLEAN_ADDITION	=
 #@ make_all
 #@ make_clean
 #@ make_install
-#@ make_install_BININST
-#@ make_install_HDERINST
+#@ make_install_LIBINST
 #@ make_install_DFTHDERINST
 #@ make_uninstall
-#@ make_uninstall_BININST
-#@ make_uninstall_HDERINST
+#@ make_uninstall_LIBINST
 #@ make_uninstall_DFTHDERINST
 include $(MKTPLDIR)/makeobj_$(MKTPLOS).inc
 
 ###### 目标文件依赖关系
-access_token	:	$(c_FILE_o)
+demo.fcgi	:	$(c_FILE_o)
 	$(CC) -o $@ $(c_FILE_o) $(LFLAGS)
 

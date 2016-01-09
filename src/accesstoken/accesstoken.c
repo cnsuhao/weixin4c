@@ -2,7 +2,7 @@
 
 #include "curl/curl.h"
 
-#include "IDL_access_token.dsc.h"
+#include "IDL_accesstoken.dsc.h"
 
 struct StringBuffer
 {
@@ -35,8 +35,9 @@ static size_t CurlProc( char *buffer , size_t size , size_t nmemb , void *p )
 	return size*nmemb;
 }
 
-static int AccessToken( int loop_flag )
+static int AccessToken( char *project_name , int loop_flag )
 {
+	char			etc_pathfilename[ 256 + 1 ] ;
 	char			*AppID = NULL ;
 	char			*AppSecret = NULL ;
 	
@@ -44,7 +45,7 @@ static int AccessToken( int loop_flag )
 	CURLcode		res ;
 	char			url[ 1024 + 1 ] ;
 	struct StringBuffer	buf ;
-	access_token		at ;
+	accesstoken		at ;
 	
 	int			nret = 0 ;
 	
@@ -52,7 +53,7 @@ static int AccessToken( int loop_flag )
 	
 	memset( & buf , 0x00 , sizeof(struct StringBuffer) );
 	
-	memset( & at , 0x00 , sizeof(access_token) );
+	memset( & at , 0x00 , sizeof(accesstoken) );
 	
 	do
 	{
@@ -60,11 +61,15 @@ static int AccessToken( int loop_flag )
 		sleep( at.expires_in / 2 );
 		InfoLog( __FILE__ , __LINE__ , "sleep [%d]seconds done" , at.expires_in / 2 );
 		
-		PUBReadEntireFileSafely( ETC_PATHFILENAME_AppID , "r" , & AppID , NULL );
+		memset( etc_pathfilename , 0x00 , sizeof(etc_pathfilename) );
+		snprintf( etc_pathfilename , sizeof(etc_pathfilename)-1 , "%s/etc/%s/AppID" , getenv("HOME") , project_name );
+		PUBReadEntireFileSafely( etc_pathfilename , "r" , & AppID , NULL );
 		PUBStringNoEnter( AppID );
 		InfoLog( __FILE__ , __LINE__ , "AppID[%s]" , AppID );
 		
-		PUBReadEntireFileSafely( ETC_PATHFILENAME_AppSecret , "r" , & AppSecret , NULL);
+		memset( etc_pathfilename , 0x00 , sizeof(etc_pathfilename) );
+		snprintf( etc_pathfilename , sizeof(etc_pathfilename)-1 , "%s/etc/%s/AppSecret" , getenv("HOME") , project_name );
+		PUBReadEntireFileSafely( etc_pathfilename , "r" , & AppSecret , NULL);
 		PUBStringNoEnter( AppSecret );
 		InfoLog( __FILE__ , __LINE__ , "AppSecret[%s]" , AppSecret );
 		
@@ -93,20 +98,22 @@ static int AccessToken( int loop_flag )
 		curl_easy_cleanup( curl );
 		if( res == CURLE_OK )
 		{
-			memset( & at , 0x00 , sizeof(access_token) );
-			nret = DSCDESERIALIZE_JSON_access_token( NULL , buf.base , & (buf.str_len) , & at ) ;
+			memset( & at , 0x00 , sizeof(accesstoken) );
+			nret = DSCDESERIALIZE_JSON_accesstoken( NULL , buf.base , & (buf.str_len) , & at ) ;
 			if( nret )
 			{
-				ErrorLog( __FILE__ , __LINE__ , "DSCDESERIALIZE_JSON_access_token failed[%d] , json[%.*s]" , nret , buf.str_len , buf.base );
+				ErrorLog( __FILE__ , __LINE__ , "DSCDESERIALIZE_JSON_accesstoken failed[%d] , json[%.*s]" , nret , buf.str_len , buf.base );
 				break;
 			}
 			else
 			{
-				InfoLog( __FILE__ , __LINE__ , "DSCDESERIALIZE_JSON_access_token ok , json[%.*s]" , buf.str_len , buf.base );
+				InfoLog( __FILE__ , __LINE__ , "DSCDESERIALIZE_JSON_accesstoken ok , json[%.*s]" , buf.str_len , buf.base );
 			}
 			
-			PUBWriteEntireFile( ETC_PATHFILENAME_AccessToken , "w" , at.access_token , -1 );
-			InfoLog( __FILE__ , __LINE__ , "write[%s] to file[%s]" , at.access_token , ETC_PATHFILENAME_AccessToken );
+			memset( etc_pathfilename , 0x00 , sizeof(etc_pathfilename) );
+			snprintf( etc_pathfilename , sizeof(etc_pathfilename)-1 , "%s/etc/%s/AccessToken" , getenv("HOME") , project_name );
+			PUBWriteEntireFile( etc_pathfilename , "w" , at.access_token , -1 );
+			InfoLog( __FILE__ , __LINE__ , "write[%s] to file[%s]" , at.access_token , etc_pathfilename );
 		}
 		
 		free( AppID ); AppID = NULL ;
@@ -137,20 +144,20 @@ static int AccessToken( int loop_flag )
 
 static void usage()
 {
-	printf( "USAGE : access_token [ 0 | 1 ]\n" );
-	printf( "                    0 : fetch once\n" );
-	printf( "                    1 : fetch for-ever\n" );
+	printf( "USAGE : access_token project_name once_flag\n" );
+	printf( "                     once_flag : 0 : fetch once\n" );
+	printf( "                                 1 : fetch for-ever\n" );
 	return;
 }
 
 int main( int argc , char *argv[] )
 {
-	SetLogFile( HOME"/log/access_token.log" );
-	SetLogLevel( LOGLEVEL_DEBUG );
-	
-	if( argc == 1 + 1 )
+	if( argc == 1 + 2 )
 	{
-		return -AccessToken( atoi(argv[1]) );
+		SetLogFile( "%s/log/%s_access_token.log" , getenv("HOME") , argv[1] );
+		SetLogLevel( LOGLEVEL_DEBUG );
+		
+		return -AccessToken( argv[1] , atoi(argv[2]) );
 	}
 	else
 	{

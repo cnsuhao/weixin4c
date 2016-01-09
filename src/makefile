@@ -7,7 +7,7 @@
 
 ###### всд©б╪еДжцгЬ
 DIROBJS		= \
-			access_token \
+			accesstoken \
 			public \
 			weixin4c \
 
