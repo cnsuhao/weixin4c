@@ -154,7 +154,7 @@ int main( int argc , char *argv[] )
 {
 	if( argc == 1 + 2 )
 	{
-		SetLogFile( "%s/log/%s_access_token.log" , getenv("HOME") , argv[1] );
+		SetLogFile( "%s/log/%s_accesstoken.log" , getenv("HOME") , argv[1] );
 		SetLogLevel( LOGLEVEL_DEBUG );
 		
 		return -AccessToken( argv[1] , atoi(argv[2]) );

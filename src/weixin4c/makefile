@@ -21,7 +21,7 @@ c_FILE		=	\
 			IDL_xml.dsc.c \
 
 ###### 目标文件、安装目录配置区
-include makeinstall
+include ../makeinstall
 LIB		=	libweixin4c.a
 LIBINST		=	$(_LIBINST)
 HDER		=	weixin4c.h IDL_xml.dsc.h
