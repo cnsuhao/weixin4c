@@ -12,8 +12,6 @@ int ReceiveText( struct Weixin4cEnv *penv , char *post_data , int post_data_len 
 	
 	int	nret = 0 ;
 	
-	InfoLog( __FILE__ , __LINE__ , "req xml[%.*s]" , post_data_len , post_data );
-	
 	TakeoffCDATA( p_req->ToUserName );
 	TakeoffCDATA( p_req->FromUserName );
 	TakeoffCDATA( p_req->Content );
@@ -23,7 +21,9 @@ int ReceiveText( struct Weixin4cEnv *penv , char *post_data , int post_data_len 
 	output_bufsize = sizeof(output_buffer) ;
 	if( penv->pconf->funcs.pfuncReceiveTextProc )
 	{
+		SetLogFile( "%s/log/%s_ReceiveTextProc.log" , penv->pconf->home , penv->pconf->project_name );
 		nret = penv->pconf->funcs.pfuncReceiveTextProc( penv->pconf->user_data , p_req , output_buffer , & output_buflen , & output_bufsize ) ;
+		SetLogFile( "%s/log/%s_weixin4c.log" , penv->pconf->home , penv->pconf->project_name );
 		if( nret )
 		{
 			ErrorLog( __FILE__ , __LINE__ , "pfuncReceiveTextProc failed[%d]" , nret );

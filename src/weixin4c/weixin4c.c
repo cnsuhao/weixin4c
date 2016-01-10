@@ -88,9 +88,7 @@ static int cgimain( struct Weixin4cEnv *penv )
 				InfoLog( __FILE__ , __LINE__ , "req.MsgType[%s]" , req.MsgType );
 				if( strcmp( req.MsgType , "<![CDATA[event]]>" ) == 0 )
 				{
-					SetLogFile( "%s/log/%s_ReceiveEvent.log" , penv->pconf->home , penv->pconf->project_name );
 					nret = ReceiveEvent( penv , post_data , post_data_len , & req ) ;
-					SetLogFile( "%s/log/%s_weixin4c.log" , penv->pconf->home , penv->pconf->project_name );
 					if( nret )
 					{
 						ErrorLog( __FILE__ , __LINE__ , "ReceiveEvent failed[%d]" , nret );
@@ -102,9 +100,7 @@ static int cgimain( struct Weixin4cEnv *penv )
 				}
 				else if( strcmp( req.MsgType , "<![CDATA[text]]>" ) == 0 )
 				{
-					SetLogFile( "%s/log/%s_ReceiveText.log" , penv->pconf->home , penv->pconf->project_name );
 					nret = ReceiveText( penv , post_data , post_data_len , & req ) ;
-					SetLogFile( "%s/log/%s_weixin4c.log" , penv->pconf->home , penv->pconf->project_name );
 					if( nret )
 					{
 						ErrorLog( __FILE__ , __LINE__ , "ReceiveText failed[%d]" , nret );
@@ -116,9 +112,7 @@ static int cgimain( struct Weixin4cEnv *penv )
 				}
 				else if( strcmp( req.MsgType , "<![CDATA[image]]>" ) == 0 )
 				{
-					SetLogFile( "%s/log/%s_ReceiveImage.log" , penv->pconf->home , penv->pconf->project_name );
 					nret = ReceiveImage( penv , post_data , post_data_len , & req ) ;
-					SetLogFile( "%s/log/%s_weixin4c.log" , penv->pconf->home , penv->pconf->project_name );
 					if( nret )
 					{
 						ErrorLog( __FILE__ , __LINE__ , "ReceiveImage failed[%d]" , nret );
@@ -130,9 +124,7 @@ static int cgimain( struct Weixin4cEnv *penv )
 				}
 				else if( strcmp( req.MsgType , "<![CDATA[voice]]>" ) == 0 )
 				{
-					SetLogFile( "%s/log/%s_ReceiveVoice.log" , penv->pconf->home , penv->pconf->project_name );
 					nret = ReceiveVoice( penv , post_data , post_data_len , & req ) ;
-					SetLogFile( "%s/log/%s_weixin4c.log" , penv->pconf->home , penv->pconf->project_name );
 					if( nret )
 					{
 						ErrorLog( __FILE__ , __LINE__ , "ReceiveVoice failed[%d]" , nret );
@@ -144,9 +136,7 @@ static int cgimain( struct Weixin4cEnv *penv )
 				}
 				else if( strcmp( req.MsgType , "<![CDATA[video]]>" ) == 0 )
 				{
-					SetLogFile( "%s/log/%s_ReceiveVideo.log" , penv->pconf->home , penv->pconf->project_name );
 					nret = ReceiveVideo( penv , post_data , post_data_len , & req ) ;
-					SetLogFile( "%s/log/%s_weixin4c.log" , penv->pconf->home , penv->pconf->project_name );
 					if( nret )
 					{
 						ErrorLog( __FILE__ , __LINE__ , "ReceiveVideo failed[%d]" , nret );
@@ -158,9 +148,7 @@ static int cgimain( struct Weixin4cEnv *penv )
 				}
 				else if( strcmp( req.MsgType , "<![CDATA[shortvideo]]>" ) == 0 )
 				{
-					SetLogFile( "%s/log/%s_ReceiveShortVideo.log" , penv->pconf->home , penv->pconf->project_name );
 					nret = ReceiveShortVideo( penv , post_data , post_data_len , & req ) ;
-					SetLogFile( "%s/log/%s_weixin4c.log" , penv->pconf->home , penv->pconf->project_name );
 					if( nret )
 					{
 						ErrorLog( __FILE__ , __LINE__ , "ReceiveShortVideo failed[%d]" , nret );
@@ -172,9 +160,7 @@ static int cgimain( struct Weixin4cEnv *penv )
 				}
 				else if( strcmp( req.MsgType , "<![CDATA[location]]>" ) == 0 )
 				{
-					SetLogFile( "%s/log/%s_ReceiveLocation.log" , penv->pconf->home , penv->pconf->project_name );
 					nret = ReceiveLocation( penv , post_data , post_data_len , & req ) ;
-					SetLogFile( "%s/log/%s_weixin4c.log" , penv->pconf->home , penv->pconf->project_name );
 					if( nret )
 					{
 						ErrorLog( __FILE__ , __LINE__ , "ReceiveLocation failed[%d]" , nret );
@@ -186,9 +172,7 @@ static int cgimain( struct Weixin4cEnv *penv )
 				}
 				else if( strcmp( req.MsgType , "<![CDATA[link]]>" ) == 0 )
 				{
-					SetLogFile( "%s/log/%s_ReceiveLink.log" , penv->pconf->home , penv->pconf->project_name );
 					nret = ReceiveLink( penv , post_data , post_data_len , & req ) ;
-					SetLogFile( "%s/log/%s_weixin4c.log" , penv->pconf->home , penv->pconf->project_name );
 					if( nret )
 					{
 						ErrorLog( __FILE__ , __LINE__ , "ReceiveLink failed[%d]" , nret );
