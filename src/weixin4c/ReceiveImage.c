@@ -6,6 +6,7 @@ int ReceiveImage( struct Weixin4cEnv *penv , char *post_data , int post_data_len
 	xml	rsp ;
 	char	output_buffer[ 4096 * 100 ] ;
 	int	output_buflen ;
+	int	output_bufsize ;
 	char	rsp_buffer[ 4096 * 110 ] ;
 	int	rsp_buflen ;
 	
@@ -20,9 +21,10 @@ int ReceiveImage( struct Weixin4cEnv *penv , char *post_data , int post_data_len
 	
 	memset( output_buffer , 0x00 , sizeof(output_buffer) );
 	output_buflen = 0 ;
+	output_bufsize = sizeof(output_buffer) ;
 	if( penv->pconf->funcs.pfuncReceiveImageProc )
 	{
-		nret = penv->pconf->funcs.pfuncReceiveImageProc( p_req , output_buffer , & output_buflen , sizeof(output_buffer) ) ;
+		nret = penv->pconf->funcs.pfuncReceiveImageProc( penv->pconf->user_data , p_req , output_buffer , & output_buflen , & output_bufsize ) ;
 		if( nret )
 		{
 			ErrorLog( __FILE__ , __LINE__ , "pfuncReceiveImageProc failed[%d]" , nret );

@@ -7,7 +7,7 @@
 
 ###### 源文件配置区
 #@ c_FILE
-c_FILE		=	demo.c \
+c_FILE		=	main.c \
 			ReceiveEventProc.c \
 			ReceiveTextProc.c \
 			ReceiveImageProc.c \

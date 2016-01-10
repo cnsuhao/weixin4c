@@ -29,7 +29,7 @@ c_FILE_CLEAN	=	$(c_FILE_o) $(c_FILE2_o) $(c_FILE3_o) $(c_FILE4_o) $(c_FILE5_o)
 .c.o	:
 	$(CC) $(CFLAGS) -c $<
 
-c_FILE		=	demo.c \
+c_FILE		=	main.c \
 			ReceiveEventProc.c \
 			ReceiveTextProc.c \
 			ReceiveImageProc.c \

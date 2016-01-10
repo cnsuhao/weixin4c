@@ -12,7 +12,7 @@ static int cgiinit( struct Weixin4cEnv *penv )
 	
 	if( penv->pconf->funcs.pfuncInitEnvProc )
 	{
-		nret = penv->pconf->funcs.pfuncInitEnvProc() ;
+		nret = penv->pconf->funcs.pfuncInitEnvProc( penv->pconf->user_data ) ;
 		if( nret )
 		{
 			ErrorLog( __FILE__ , __LINE__ , "pfuncInitEnvProc failed[%d]" , nret );
@@ -224,7 +224,7 @@ static int cgiclean( struct Weixin4cEnv *penv )
 	
 	if( penv->pconf->funcs.pfuncCleanEnvProc )
 	{
-		nret = penv->pconf->funcs.pfuncCleanEnvProc() ;
+		nret = penv->pconf->funcs.pfuncCleanEnvProc( penv->pconf->user_data ) ;
 		if( nret )
 		{
 			ErrorLog( __FILE__ , __LINE__ , "pfuncCleanEnvProc failed[%d]" , nret );

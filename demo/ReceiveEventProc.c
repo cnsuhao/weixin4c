@@ -1,25 +1,25 @@
 #include "weixin4c.h"
 
 funcReceiveEventProc ReceiveEventProc ;
-int ReceiveEventProc( xml *p_req , char *output_buffer , int *p_output_buflen , int output_bufsize )
+int ReceiveEventProc( void *user_data , xml *p_req , char *output_buffer , int *p_output_buflen , int *p_output_bufsize )
 {
 	int		n ;
 	
 	if( strcmp( p_req->Event , "<![CDATA[subscribe]]>" ) == 0 )
 	{
-		(*p_output_buflen) += snprintf( output_buffer+(*p_output_buflen) , output_bufsize-1 - (*p_output_buflen) ,
+		(*p_output_buflen) += snprintf( output_buffer+(*p_output_buflen) , (*p_output_bufsize)-1 - (*p_output_buflen) ,
 			"欢迎订阅"
 			);
 	}
 	else if( strcmp( p_req->Event , "<![CDATA[unsubscribe]]>" ) == 0 )
 	{
-		(*p_output_buflen) += snprintf( output_buffer+(*p_output_buflen) , output_bufsize-1 - (*p_output_buflen) ,
+		(*p_output_buflen) += snprintf( output_buffer+(*p_output_buflen) , (*p_output_bufsize)-1 - (*p_output_buflen) ,
 			"再见"
 			);
 	}
 	
 	InfoLog( __FILE__ , __LINE__ , "文本编码前[%s]" , output_buffer );
-	n = PUBConvCharacterCode( "GB18030" , "UTF-8" , output_buffer , (*p_output_buflen) , output_bufsize );
+	n = PUBConvCharacterCode( "GB18030" , "UTF-8" , output_buffer , (*p_output_buflen) , (*p_output_bufsize) );
 	if( n < 0 )
 	{
 		ErrorLog( __FILE__ , __LINE__ , "PUBConvCharacterCode failed[%d]" , n );
