@@ -49,5 +49,5 @@ Calvin
 
 	总结："weixin4c.a"只是实现了一个微信公众号分拣引擎，由cgi可执行程序"(你的应用名).fcgi"中的main函数调用，main函数同时还会传递一批回调函数指针进去，供"weixin4c.a"分拣引擎确定请求报文类型后回调，就酱紫，很简单吧 ^_^
 
-	（具体见doc/weixin4c.doc）
+	（具体见doc/weixin4c.doc、doc/weixin4c.vsd）
 
