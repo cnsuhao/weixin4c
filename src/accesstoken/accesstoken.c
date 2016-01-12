@@ -1,57 +1,24 @@
 #include "weixin4c_public.h"
 
-#include "curl/curl.h"
-
 #include "IDL_accesstoken.dsc.h"
-
-struct StringBuffer
-{
-	int		buf_size ;
-	int		str_len ;
-	char		*base ;
-} ;
-
-static size_t CurlProc( char *buffer , size_t size , size_t nmemb , void *p )
-{
-	struct StringBuffer	*buf = (struct StringBuffer *)p ;
-	
-	if( (int)(size*nmemb) > buf->buf_size-1 - buf->str_len )
-	{
-		char	*tmp = NULL ;
-		int	new_buf_size = buf->buf_size + 4096 ;
-		tmp = realloc( buf->base , new_buf_size ) ;
-		if( tmp == NULL )
-		{
-			ErrorLog( __FILE__ , __LINE__ , "realloc failed , errno[%d]" , errno );
-			return -1;
-		}
-		buf->base = tmp ;
-		buf->buf_size = new_buf_size ;
-		memset( buf->base + buf->str_len , 0x00 , buf->buf_size-1 - buf->str_len );
-	}
-	
-	memcpy( buf->base + buf->str_len , buffer , size*nmemb );
-	buf->str_len += size*nmemb ;
-	return size*nmemb;
-}
 
 static int AccessToken( char *project_name , int loop_flag )
 {
-	char			etc_pathfilename[ 256 + 1 ] ;
-	char			*AppID = NULL ;
-	char			*AppSecret = NULL ;
+	char				etc_pathfilename[ 256 + 1 ] ;
+	char				*AppID = NULL ;
+	char				*AppSecret = NULL ;
 	
-	CURL			*curl = NULL ;
-	CURLcode		res ;
-	char			url[ 1024 + 1 ] ;
-	struct StringBuffer	buf ;
-	accesstoken		at ;
+	CURL				*curl = NULL ;
+	CURLcode			res ;
+	char				url[ 1024 + 1 ] ;
+	struct CurlResponseBuffer	buf ;
+	accesstoken			at ;
 	
-	int			nret = 0 ;
+	int				nret = 0 ;
 	
 	curl_global_init( CURL_GLOBAL_ALL );
 	
-	memset( & buf , 0x00 , sizeof(struct StringBuffer) );
+	memset( & buf , 0x00 , sizeof(struct CurlResponseBuffer) );
 	
 	memset( & at , 0x00 , sizeof(accesstoken) );
 	
@@ -84,7 +51,7 @@ static int AccessToken( char *project_name , int loop_flag )
 		snprintf( url , sizeof(url)-1 , "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s" , AppID , AppSecret );
 		curl_easy_setopt( curl , CURLOPT_URL , url );
 		
-		curl_easy_setopt( curl , CURLOPT_WRITEFUNCTION , & CurlProc );
+		curl_easy_setopt( curl , CURLOPT_WRITEFUNCTION , & CurlResponseProc );
 		if( buf.buf_size )
 		{
 			memset( buf.base , 0x00 , buf.buf_size );

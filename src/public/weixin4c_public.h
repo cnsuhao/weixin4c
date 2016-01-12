@@ -11,6 +11,8 @@
 
 #include "LOGC.h"
 
+#include "curl/curl.h"
+
 #ifndef MAX
 #define MAX(_a_,_b_) (_a_>_b_?_a_:_b_)
 #endif
@@ -45,6 +47,16 @@ int PUBReadPostBuffer();
 char *PUBGetPostBufferPtr();
 int PUBGetPostBufferLength();
 void PUBFreePostBuffer();
+
+struct CurlResponseBuffer
+{
+	int		buf_size ;
+	int		str_len ;
+	char		*base ;
+} ;
+
+size_t CurlResponseProc( char *buffer , size_t size , size_t nmemb , void *p );
+void CurlFreeBuffer( struct CurlResponseBuffer *pbuf );
 
 #endif
 
