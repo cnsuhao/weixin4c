@@ -41,7 +41,7 @@ static int AccessToken( char *project_name , int loop_flag )
 	char			*AppID = NULL ;
 	char			*AppSecret = NULL ;
 	
-	CURL			*curl = "" ;
+	CURL			*curl = NULL ;
 	CURLcode		res ;
 	char			url[ 1024 + 1 ] ;
 	struct StringBuffer	buf ;
