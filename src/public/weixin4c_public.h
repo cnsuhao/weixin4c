@@ -37,6 +37,10 @@ char *PUBConvCharacterCodeStatic( char *from_character_code , char *to_character
 void PUBFreeCharacterCodeStatic();
 int PUBDupConvCharacterCode( char *from_character_code , char *to_character_code , char *buf , int len , char **out_dup );
 
+/*
+int PUBDecodingUnicode( char *str );
+*/
+
 int PUBGetUrlParamPtr( char *key , char **pp_value , int *p_value_len );
 int PUBGetUrlParam( char *key , char *value , int value_size );
 int PUBDupUrlParam( char *key , char **pp_value );
