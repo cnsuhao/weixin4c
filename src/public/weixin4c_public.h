@@ -27,6 +27,7 @@ int PUBHexExpand( char *HexBuf , int HexBufLen , char *AscBuf );
 
 void TakeoffCDATA( char *str_with_cdata );
 
+int PUBReadEntireFile( char *filename , char *mode , char *p_buf , long *p_file_size );
 int PUBReadEntireFileSafely( char *filename , char *mode , char **pp_buf , long *p_file_size );
 int PUBWriteEntireFile( char *filename , char *mode , char *p_buf , long file_size );
 
