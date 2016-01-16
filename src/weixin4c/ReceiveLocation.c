@@ -12,9 +12,9 @@ int ReceiveLocation( struct Weixin4cEnv *penv , char *post_data , int post_data_
 	
 	int	nret = 0 ;
 	
-	TakeoffCDATA( p_req->ToUserName );
-	TakeoffCDATA( p_req->FromUserName );
-	TakeoffCDATA( p_req->Label );
+	PUBTakeoffCDATA( p_req->ToUserName );
+	PUBTakeoffCDATA( p_req->FromUserName );
+	PUBTakeoffCDATA( p_req->Label );
 	
 	memset( output_buffer , 0x00 , sizeof(output_buffer) );
 	output_buflen = 0 ;

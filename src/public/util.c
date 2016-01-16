@@ -36,7 +36,7 @@ int PUBHexExpand( char *HexBuf , int HexBufLen , char *AscBuf )
 	return(0);
 }
 
-void TakeoffCDATA( char *str_with_cdata )
+void PUBTakeoffCDATA( char *str_with_cdata )
 {
 	if( memcmp( str_with_cdata , "<![CDATA[" , 9 ) == 0 )
 	{
@@ -47,5 +47,50 @@ void TakeoffCDATA( char *str_with_cdata )
 	}
 	
 	return;
+}
+
+int PUBCountChar( char *str , char ch )
+{
+	char	*p = NULL ;
+	int	count ;
+	
+	for( p = str , count = 0 ; (*p) ; p++ )
+	{
+		if( (*p) == ch )
+			count++;
+	}
+	
+	return count;
+}
+
+int PUBTrimTailChar( char *str , char ch )
+{
+	char	*p = NULL ;
+	int	count ;
+	
+	for( p = str + strlen(str) - 1 , count = 0 ; p >= str ; p-- )
+	{
+		if( (*p) == ch )
+		{
+			count++;
+			(*p) = '\0' ;
+		}
+		else
+		{
+			break;
+		}
+	}
+	
+	return count;
+}
+
+void PUBSrand()
+{
+	srand( time(NULL) );
+}
+
+int PUBRand( int min, int max )
+{
+	return ( rand() % ( max - min + 1 ) ) + min ;
 }
 

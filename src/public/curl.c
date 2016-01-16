@@ -24,9 +24,18 @@ size_t CurlResponseProc( char *buffer , size_t size , size_t nmemb , void *p )
 	return size*nmemb;
 }
 
+void CurlCleanBuffer( struct CurlResponseBuffer *pbuf )
+{
+	if( pbuf->base )
+	{
+		memset( pbuf->base , 0x00 , pbuf->buf_size );
+		pbuf->str_len = 0 ;
+	}
+}
+
 void CurlFreeBuffer( struct CurlResponseBuffer *pbuf )
 {
-	if( pbuf == NULL )
+	if( pbuf && pbuf->base )
 	{
 		free( pbuf->base );
 		memset( pbuf , 0x00 , sizeof(struct CurlResponseBuffer) );

@@ -12,11 +12,11 @@ int ReceiveVoice( struct Weixin4cEnv *penv , char *post_data , int post_data_len
 	
 	int	nret = 0 ;
 	
-	TakeoffCDATA( p_req->ToUserName );
-	TakeoffCDATA( p_req->FromUserName );
-	TakeoffCDATA( p_req->MediaId );
-	TakeoffCDATA( p_req->Format );
-	TakeoffCDATA( p_req->Recognition );
+	PUBTakeoffCDATA( p_req->ToUserName );
+	PUBTakeoffCDATA( p_req->FromUserName );
+	PUBTakeoffCDATA( p_req->MediaId );
+	PUBTakeoffCDATA( p_req->Format );
+	PUBTakeoffCDATA( p_req->Recognition );
 	
 	memset( output_buffer , 0x00 , sizeof(output_buffer) );
 	output_buflen = 0 ;

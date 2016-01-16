@@ -12,10 +12,10 @@ int ReceiveShortVideo( struct Weixin4cEnv *penv , char *post_data , int post_dat
 	
 	int	nret = 0 ;
 	
-	TakeoffCDATA( p_req->ToUserName );
-	TakeoffCDATA( p_req->FromUserName );
-	TakeoffCDATA( p_req->MediaId );
-	TakeoffCDATA( p_req->ThumbMediaId );
+	PUBTakeoffCDATA( p_req->ToUserName );
+	PUBTakeoffCDATA( p_req->FromUserName );
+	PUBTakeoffCDATA( p_req->MediaId );
+	PUBTakeoffCDATA( p_req->ThumbMediaId );
 	
 	memset( output_buffer , 0x00 , sizeof(output_buffer) );
 	output_buflen = 0 ;

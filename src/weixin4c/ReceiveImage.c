@@ -12,10 +12,10 @@ int ReceiveImage( struct Weixin4cEnv *penv , char *post_data , int post_data_len
 	
 	int	nret = 0 ;
 	
-	TakeoffCDATA( p_req->ToUserName );
-	TakeoffCDATA( p_req->FromUserName );
-	TakeoffCDATA( p_req->PicUrl );
-	TakeoffCDATA( p_req->MediaId );
+	PUBTakeoffCDATA( p_req->ToUserName );
+	PUBTakeoffCDATA( p_req->FromUserName );
+	PUBTakeoffCDATA( p_req->PicUrl );
+	PUBTakeoffCDATA( p_req->MediaId );
 	
 	memset( output_buffer , 0x00 , sizeof(output_buffer) );
 	output_buflen = 0 ;
