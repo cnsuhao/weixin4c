@@ -29,6 +29,8 @@ int PUBCountChar( char *str , char ch );
 int PUBTrimTailChar( char *str , char ch );
 int PUBTrimHeadCharset( char *str , char *charset );
 int PUBTrimHead( char *str );
+int PUBTrimTail( char *str );
+int PUBTrim( char *str );
 int PUBSnprintF( char *str , size_t size , const char *format , ... );
 void PUBSrand();
 int PUBRand( int min, int max );

@@ -7,7 +7,7 @@ int ReceiveShortVideo( struct Weixin4cEnv *penv , char *post_data , int post_dat
 	char	output_buffer[ 2048 ] ;
 	int	output_buflen ;
 	int	output_bufsize ;
-	char	rsp_buffer[ 2048 + 2048 ] ;
+	char	rsp_buffer[ 2048 * 3 ] ;
 	int	rsp_buflen ;
 	
 	int	nret = 0 ;

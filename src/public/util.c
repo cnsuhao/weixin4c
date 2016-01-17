@@ -135,6 +135,38 @@ int PUBTrimHead( char *str )
 	return count;
 }
 
+int PUBTrimTail( char *str )
+{
+	char	*p = NULL ;
+	int	count ;
+	
+	for( p = str + strlen(str) - 1 , count = 0 ; p >= str ; p-- )
+	{
+		if( strchr( " \t" , (*p) ) )
+		{
+			count++;
+		}
+		else if( (unsigned char)(*p) == 0xA1 && p > str && (unsigned char)*(p-1) == 0xA1 )
+		{
+			count++;
+			p--;
+		}
+		else
+		{
+			break;
+		}
+	}
+	
+	p[1] = '\0' ;
+	
+	return count;
+}
+
+int PUBTrim( char *str )
+{
+	return PUBTrimTail(str)+PUBTrimHead(str);
+}
+
 int PUBSnprintF( char *str , size_t size , const char *format , ... )
 {
 	va_list		valist ;
