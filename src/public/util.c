@@ -84,6 +84,80 @@ int PUBTrimTailChar( char *str , char ch )
 	return count;
 }
 
+int PUBTrimHeadCharset( char *str , char *charset )
+{
+	char	*p = NULL ;
+	char	*end = NULL ;
+	int	count ;
+	
+	for( p = str , end = str + strlen(str) - 1 , count = 0 ; p <= end ; p++ )
+	{
+		if( strchr( charset , (*p) ) )
+		{
+			count++;
+		}
+		else
+		{
+			break;
+		}
+	}
+	
+	memmove( str , p , strlen(p)+1 );
+	
+	return count;
+}
+
+int PUBTrimHead( char *str )
+{
+	char	*p = NULL ;
+	char	*end = NULL ;
+	int	count ;
+	
+	for( p = str , end = str + strlen(str) - 1 , count = 0 ; p <= end ; p++ )
+	{
+		if( strchr( " \t" , (*p) ) )
+		{
+			count++;
+		}
+		else if( (unsigned char)(*p) == 0xA1 && (unsigned char)*(p+1) == 0xA1 )
+		{
+			count++;
+			p++;
+		}
+		else
+		{
+			break;
+		}
+	}
+	
+	memmove( str , p , strlen(p)+1 );
+	
+	return count;
+}
+
+int PUBSnprintF( char *str , size_t size , const char *format , ... )
+{
+	va_list		valist ;
+	int		len ;
+	
+	va_start( valist , format );
+	len = vsnprintf( str , size , format , valist ) ;
+	va_end( valist );
+	if( len == -1 )
+	{
+		return 0;
+	}
+	else if( len > size )
+	{
+		(*str) = '\0' ;
+		return 0;
+	}
+	else
+	{
+		return len;
+	}
+}
+
 void PUBSrand()
 {
 	srand( time(NULL) );

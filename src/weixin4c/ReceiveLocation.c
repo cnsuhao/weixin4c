@@ -42,7 +42,7 @@ int ReceiveLocation( struct Weixin4cEnv *penv , char *post_data , int post_data_
 	
 	memset( rsp_buffer , 0x00 , sizeof(rsp_buffer) );
 	rsp_buflen = sizeof(rsp_buffer) - 1 ;
-	nret = DSCSERIALIZE_XML_xml( & rsp , "GB18030" , rsp_buffer , & rsp_buflen ) ;
+	nret = DSCSERIALIZE_XML_xml( & rsp , "UTF-8" , rsp_buffer , & rsp_buflen ) ;
 	if( nret )
 	{
 		ErrorLog( __FILE__ , __LINE__ , "DSCSERIALIZE_XML_xml failed[%d]" , nret );
@@ -50,8 +50,8 @@ int ReceiveLocation( struct Weixin4cEnv *penv , char *post_data , int post_data_
 	else
 	{
 		InfoLog( __FILE__ , __LINE__ , "DSCSERIALIZE_XML_xml ok" );
-		InfoLog( __FILE__ , __LINE__ , "rsp xml[%.*s]" , rsp_buflen-41 , rsp_buffer+41 );
-		printf( "%.*s" , rsp_buflen-41 , rsp_buffer+41 );
+		InfoLog( __FILE__ , __LINE__ , "rsp xml[%d][%.*s]" , rsp_buflen-39 , rsp_buflen-39 , rsp_buffer+39 );
+		printf( "%.*s" , rsp_buflen-39 , rsp_buffer+39 );
 	}
 	
 	return 0;
