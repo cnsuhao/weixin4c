@@ -30,11 +30,11 @@ int ReceiveEvent( struct Weixin4cEnv *penv , char *post_data , int post_data_len
 	}
 	
 	memset( & rsp , 0x00 , sizeof(xml) );
-	snprintf( rsp.ToUserName , sizeof(rsp.ToUserName)-1 , "<![CDATA[%s]]>" , p_req->FromUserName );
-	snprintf( rsp.FromUserName , sizeof(rsp.FromUserName)-1 , "<![CDATA[%s]]>" , p_req->ToUserName );
+	SNPRINTF( rsp.ToUserName , sizeof(rsp.ToUserName)-1 , "<![CDATA[%s]]>" , p_req->FromUserName );
+	SNPRINTF( rsp.FromUserName , sizeof(rsp.FromUserName)-1 , "<![CDATA[%s]]>" , p_req->ToUserName );
 	rsp.CreateTime = (int)time(NULL) ;
 	strcpy( rsp.MsgType , "<![CDATA[text]]>" );
-	snprintf( rsp.Content , sizeof(rsp.Content)-1 , "<![CDATA[%s]]>" , output_buffer );
+	SNPRINTF( rsp.Content , sizeof(rsp.Content)-1 , "<![CDATA[%s]]>" , output_buffer );
 	
 	memset( rsp_buffer , 0x00 , sizeof(rsp_buffer) );
 	rsp_buflen = sizeof(rsp_buffer) - 1 ;

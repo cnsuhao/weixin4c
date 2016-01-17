@@ -29,13 +29,13 @@ static int AccessToken( char *project_name , int loop_flag )
 		InfoLog( __FILE__ , __LINE__ , "sleep [%d]seconds done" , at.expires_in / 2 );
 		
 		memset( etc_pathfilename , 0x00 , sizeof(etc_pathfilename) );
-		snprintf( etc_pathfilename , sizeof(etc_pathfilename)-1 , "%s/etc/%s/AppID" , getenv("HOME") , project_name );
+		SNPRINTF( etc_pathfilename , sizeof(etc_pathfilename)-1 , "%s/etc/%s/AppID" , getenv("HOME") , project_name );
 		PUBReadEntireFileSafely( etc_pathfilename , "r" , & AppID , NULL );
 		PUBStringNoEnter( AppID );
 		InfoLog( __FILE__ , __LINE__ , "AppID[%s]" , AppID );
 		
 		memset( etc_pathfilename , 0x00 , sizeof(etc_pathfilename) );
-		snprintf( etc_pathfilename , sizeof(etc_pathfilename)-1 , "%s/etc/%s/AppSecret" , getenv("HOME") , project_name );
+		SNPRINTF( etc_pathfilename , sizeof(etc_pathfilename)-1 , "%s/etc/%s/AppSecret" , getenv("HOME") , project_name );
 		PUBReadEntireFileSafely( etc_pathfilename , "r" , & AppSecret , NULL);
 		PUBStringNoEnter( AppSecret );
 		InfoLog( __FILE__ , __LINE__ , "AppSecret[%s]" , AppSecret );
@@ -48,7 +48,7 @@ static int AccessToken( char *project_name , int loop_flag )
 		}
 		
 		memset( url , 0x00 , sizeof(url) );
-		snprintf( url , sizeof(url)-1 , "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s" , AppID , AppSecret );
+		SNPRINTF( url , sizeof(url)-1 , "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s" , AppID , AppSecret );
 		curl_easy_setopt( curl , CURLOPT_URL , url );
 		
 		curl_easy_setopt( curl , CURLOPT_WRITEFUNCTION , & CurlResponseProc );
@@ -78,7 +78,7 @@ static int AccessToken( char *project_name , int loop_flag )
 			}
 			
 			memset( etc_pathfilename , 0x00 , sizeof(etc_pathfilename) );
-			snprintf( etc_pathfilename , sizeof(etc_pathfilename)-1 , "%s/etc/%s/AccessToken" , getenv("HOME") , project_name );
+			SNPRINTF( etc_pathfilename , sizeof(etc_pathfilename)-1 , "%s/etc/%s/AccessToken" , getenv("HOME") , project_name );
 			PUBWriteEntireFile( etc_pathfilename , "w" , at.access_token , -1 );
 			InfoLog( __FILE__ , __LINE__ , "write[%s] to file[%s]" , at.access_token , etc_pathfilename );
 		}
